@@ -1,5 +1,10 @@
 {
-  "globalHeaders": {
-    "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://alcdn.msauth.net https://alcdn.msauthimages.net; connect-src 'self' https://login.microsoftonline.com https://graph.microsoft.com https://*.sharepoint.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-src 'self' https://login.microsoftonline.com"
-  }
+  "routes": [
+    {
+      "route": "/*",
+      "headers": {
+        "Content-Security-Policy": "default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *; style-src * 'unsafe-inline';"
+      }
+    }
+  ]
 }
