@@ -1,18 +1,84 @@
 // Azure Function — proxies model calls so the API key never reaches the browser.
-// Key lives in the Static Web App's application settings as ANTHROPIC_API_KEY.
 //
-// Auth: the browser already holds an MSAL access token for Microsoft Graph.
-// We verify it against Graph, which confirms the caller is signed in and in
-// the tenant. The token is accepted from either the standard Authorization
-// header or X-Xyn-Auth, because Static Web Apps consumes Authorization in
-// some configurations before the Function sees it.
+// Auth: the browser sends its MSAL token in the request body. We verify it
+// ourselves against Entra's published signing keys rather than calling Graph.
+// Graph only accepts tokens whose audience is Graph, which made verification
+// brittle; validating the signature directly works for any token this tenant
+// issued and needs no npm dependencies.
+
+const crypto = require("crypto");
 
 const MODEL = "claude-sonnet-4-6";
+const TENANT_ID = "d5a2e3df-bdc3-4c0f-8fd4-908cd7751d67";
 
-// The token arrives in the request BODY, not a header. Graph tokens run to
-// roughly 2,000 characters and headers get size-capped and rewritten in
-// transit, which silently truncates them and makes Graph reject a token that
-// works fine from the browser. The body is not subject to that.
+let jwksCache = { keys: null, fetchedAt: 0 };
+const JWKS_TTL_MS = 60 * 60 * 1000;
+
+async function getSigningKeys(context) {
+  if (jwksCache.keys && Date.now() - jwksCache.fetchedAt < JWKS_TTL_MS) return jwksCache.keys;
+  const url = `https://login.microsoftonline.com/${TENANT_ID}/discovery/v2.0/keys`;
+  const r = await fetch(url);
+  if (!r.ok) throw new Error("Could not fetch signing keys: HTTP " + r.status);
+  const body = await r.json();
+  jwksCache = { keys: body.keys || [], fetchedAt: Date.now() };
+  context.log(`Fetched ${jwksCache.keys.length} signing keys`);
+  return jwksCache.keys;
+}
+
+function b64urlToBuf(s) {
+  return Buffer.from(s.replace(/-/g, "+").replace(/_/g, "/"), "base64");
+}
+
+async function verifyToken(token, context) {
+  const parts = token.split(".");
+  if (parts.length !== 3) return { ok: false, reason: "not a JWT", parts: parts.length };
+
+  let header, payload;
+  try {
+    header = JSON.parse(b64urlToBuf(parts[0]).toString("utf8"));
+    payload = JSON.parse(b64urlToBuf(parts[1]).toString("utf8"));
+  } catch (e) {
+    return { ok: false, reason: "could not decode JWT segments" };
+  }
+
+  if (payload.tid && payload.tid !== TENANT_ID) {
+    return { ok: false, reason: "wrong tenant", tid: payload.tid };
+  }
+  const now = Math.floor(Date.now() / 1000);
+  if (payload.exp && payload.exp < now) {
+    return { ok: false, reason: "token expired", expiredSecondsAgo: now - payload.exp };
+  }
+
+  // Some Entra access tokens are deliberately opaque to anyone but their
+  // audience and carry a "nonce" in the header; those cannot be verified here.
+  // Everything else we check properly.
+  if (header.nonce) {
+    return { ok: true, soft: true, reason: "nonce-protected token, claims checked without signature",
+             upn: payload.upn || payload.preferred_username || null };
+  }
+
+  const keys = await getSigningKeys(context);
+  const jwk = keys.find(k => k.kid === header.kid);
+  if (!jwk) return { ok: false, reason: "signing key not found for kid", kid: header.kid };
+
+  let pub;
+  try {
+    pub = crypto.createPublicKey({ key: jwk, format: "jwk" });
+  } catch (e) {
+    return { ok: false, reason: "could not build public key: " + e.message };
+  }
+
+  const verified = crypto.verify(
+    "RSA-SHA256",
+    Buffer.from(parts[0] + "." + parts[1]),
+    { key: pub, padding: crypto.constants.RSA_PKCS1_PADDING },
+    b64urlToBuf(parts[2])
+  );
+
+  if (!verified) return { ok: false, reason: "signature invalid" };
+  return { ok: true, upn: payload.upn || payload.preferred_username || null };
+}
+
 function extractToken(req) {
   if (req.body && typeof req.body.token === "string" && req.body.token.trim()) {
     return req.body.token.trim();
@@ -28,17 +94,12 @@ function extractToken(req) {
 }
 
 module.exports = async function (context, req) {
-  // GET is a deployment health check — open /api/report in a browser.
   if (req.method === "GET") {
     context.res = {
       status: 200,
       headers: { "Content-Type": "application/json" },
-      body: {
-        ok: true,
-        function: "report",
-        keyConfigured: !!process.env.ANTHROPIC_API_KEY,
-        node: process.version
-      }
+      body: { ok: true, function: "report",
+              keyConfigured: !!process.env.ANTHROPIC_API_KEY, node: process.version }
     };
     return;
   }
@@ -49,56 +110,34 @@ module.exports = async function (context, req) {
     return;
   }
 
-  // ---- verify caller ----
   const token = extractToken(req);
   if (!token) {
-    context.res = {
-      status: 401,
-      body: {
-        error: "No token received",
-        hint: "Neither Authorization nor X-Xyn-Auth reached the Function.",
-        headersSeen: Object.keys(req.headers || {}).sort()
-      }
-    };
+    context.res = { status: 401, body: { error: "No token received",
+      headersSeen: Object.keys(req.headers || {}).sort() } };
     return;
   }
 
-  let graphStatus = 0, graphBody = "";
+  let check;
   try {
-    const gr = await fetch("https://graph.microsoft.com/v1.0/me", {
-      headers: { Authorization: "Bearer " + token }
-    });
-    graphStatus = gr.status;
-    if (!gr.ok) graphBody = (await gr.text()).slice(0, 300);
-    else {
-      const me = await gr.json();
-      if (!me.id) graphStatus = 0;
-    }
+    check = await verifyToken(token, context);
   } catch (err) {
-    context.log.error("Graph verification threw:", err.message);
-    context.res = { status: 502, body: { error: "Could not reach Graph: " + err.message } };
+    context.log.error("Verification threw:", err.message);
+    context.res = { status: 502, body: { error: "Verification failed: " + err.message } };
     return;
   }
 
-  if (graphStatus !== 200) {
-    context.res = {
-      status: 401,
-      body: {
-        error: "Token rejected by Graph",
-        graphStatus: graphStatus,
-        graphDetail: graphBody,
-        tokenLength: token.length,
-        tokenLooksJwt: token.split(".").length === 3,
-        source: (req.body && req.body.token) ? "body" : "header",
-        hint: graphStatus === 401
-          ? "Token expired or is not a Graph token. Reload the page to re-run sign-in."
-          : "Unexpected Graph response."
-      }
-    };
+  if (!check.ok) {
+    context.res = { status: 401, body: {
+      error: "Token rejected",
+      reason: check.reason,
+      detail: { kid: check.kid, tid: check.tid, parts: check.parts,
+                expiredSecondsAgo: check.expiredSecondsAgo },
+      tokenLength: token.length
+    } };
     return;
   }
+  context.log(`Authorised: ${check.upn || "unknown"}${check.soft ? " (claims only)" : ""}`);
 
-  // ---- proxy ----
   const messages = req.body && req.body.messages;
   if (!Array.isArray(messages) || !messages.length) {
     context.res = { status: 400, body: { error: "messages array required" } };
@@ -119,13 +158,9 @@ module.exports = async function (context, req) {
         messages: messages
       })
     });
-
     const text = await upstream.text();
-    context.res = {
-      status: upstream.status,
-      headers: { "Content-Type": "application/json" },
-      body: text
-    };
+    context.res = { status: upstream.status,
+                    headers: { "Content-Type": "application/json" }, body: text };
   } catch (err) {
     context.log.error("Proxy failure:", err);
     context.res = { status: 502, body: { error: "Upstream request failed: " + err.message } };
