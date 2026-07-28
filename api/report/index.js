@@ -2,42 +2,95 @@
 // Key lives in the Static Web App's application settings as ANTHROPIC_API_KEY.
 //
 // Auth: the browser already holds an MSAL access token for Microsoft Graph.
-// We require it and verify it against Graph, which confirms both that the
-// caller is signed in and that they belong to the Xynergie tenant. This is
-// deliberately independent of Static Web Apps' built-in auth, which this app
-// does not use.
+// We verify it against Graph, which confirms the caller is signed in and in
+// the tenant. The token is accepted from either the standard Authorization
+// header or X-Xyn-Auth, because Static Web Apps consumes Authorization in
+// some configurations before the Function sees it.
 
 const MODEL = "claude-sonnet-4-6";
-const TENANT_ID = "d5a2e3df-bdc3-4c0f-8fd4-908cd7751d67";
 
-async function verifyCaller(authHeader, context) {
-  if (!authHeader || !authHeader.startsWith("Bearer ")) return null;
-  try {
-    const r = await fetch("https://graph.microsoft.com/v1.0/me", {
-      headers: { Authorization: authHeader }
-    });
-    if (!r.ok) return null;
-    const me = await r.json();
-    return me.id ? me : null;
-  } catch (err) {
-    context.log.error("Token verification failed:", err.message);
-    return null;
+function extractToken(req) {
+  const h = req.headers || {};
+  const candidates = [h.authorization, h.Authorization, h["x-xyn-auth"], h["X-Xyn-Auth"]];
+  for (const c of candidates) {
+    if (typeof c === "string" && c.trim()) {
+      const t = c.startsWith("Bearer ") ? c.slice(7).trim() : c.trim();
+      if (t) return t;
+    }
   }
+  return null;
 }
 
 module.exports = async function (context, req) {
+  // GET is a deployment health check — open /api/report in a browser.
+  if (req.method === "GET") {
+    context.res = {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+      body: {
+        ok: true,
+        function: "report",
+        keyConfigured: !!process.env.ANTHROPIC_API_KEY,
+        node: process.version
+      }
+    };
+    return;
+  }
+
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) {
     context.res = { status: 500, body: { error: "ANTHROPIC_API_KEY not configured" } };
     return;
   }
 
-  const caller = await verifyCaller(req.headers.authorization, context);
-  if (!caller) {
-    context.res = { status: 401, body: { error: "Sign in required" } };
+  // ---- verify caller ----
+  const token = extractToken(req);
+  if (!token) {
+    context.res = {
+      status: 401,
+      body: {
+        error: "No token received",
+        hint: "Neither Authorization nor X-Xyn-Auth reached the Function.",
+        headersSeen: Object.keys(req.headers || {}).sort()
+      }
+    };
     return;
   }
 
+  let graphStatus = 0, graphBody = "";
+  try {
+    const gr = await fetch("https://graph.microsoft.com/v1.0/me", {
+      headers: { Authorization: "Bearer " + token }
+    });
+    graphStatus = gr.status;
+    if (!gr.ok) graphBody = (await gr.text()).slice(0, 300);
+    else {
+      const me = await gr.json();
+      if (!me.id) graphStatus = 0;
+    }
+  } catch (err) {
+    context.log.error("Graph verification threw:", err.message);
+    context.res = { status: 502, body: { error: "Could not reach Graph: " + err.message } };
+    return;
+  }
+
+  if (graphStatus !== 200) {
+    context.res = {
+      status: 401,
+      body: {
+        error: "Token rejected by Graph",
+        graphStatus: graphStatus,
+        graphDetail: graphBody,
+        tokenLength: token.length,
+        hint: graphStatus === 401
+          ? "Token expired or is not a Graph token. Reload the page to re-run sign-in."
+          : "Unexpected Graph response."
+      }
+    };
+    return;
+  }
+
+  // ---- proxy ----
   const messages = req.body && req.body.messages;
   if (!Array.isArray(messages) || !messages.length) {
     context.res = { status: 400, body: { error: "messages array required" } };
@@ -63,7 +116,7 @@ module.exports = async function (context, req) {
     context.res = {
       status: upstream.status,
       headers: { "Content-Type": "application/json" },
-      body: text          // passed through raw so the client sees the real error
+      body: text
     };
   } catch (err) {
     context.log.error("Proxy failure:", err);
