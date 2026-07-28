@@ -1840,7 +1840,13 @@ document.addEventListener('click', function(e){
   // ---------- model call (via Function proxy) ----------
   function callModel(content, tries) {
     tries = tries || 4;
-    var body = JSON.stringify({ max_tokens: 1000, messages: [{ role: 'user', content: content }] });
+    // Token travels in the body: headers get size-capped in transit and a
+    // ~2000-character Graph token can arrive truncated.
+    var body = JSON.stringify({
+      max_tokens: 1000,
+      token: accessToken || '',
+      messages: [{ role: 'user', content: content }]
+    });
     var mb = body.length / 1048576;
     log('  payload ' + mb.toFixed(2) + ' MB', 'i');
     if (mb > 8) log('  warning: over 8 MB — likely to be refused, try a smaller export', 'i');
@@ -1849,13 +1855,7 @@ document.addEventListener('click', function(e){
       attempt++;
       return fetch(API_ENDPOINT, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          // Sent twice on purpose: Static Web Apps consumes Authorization in
-          // some configurations before the Function sees it.
-          'Authorization': 'Bearer ' + (accessToken || ''),
-          'X-Xyn-Auth': (accessToken || '')
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: body
       })
         .then(function (r) {
