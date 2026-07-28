@@ -1841,7 +1841,9 @@ document.addEventListener('click', function(e){
   function callModel(content, tries) {
     tries = tries || 4;
     var body = JSON.stringify({ max_tokens: 1000, messages: [{ role: 'user', content: content }] });
-    log('  payload ' + (body.length / 1048576).toFixed(2) + ' MB', 'i');
+    var mb = body.length / 1048576;
+    log('  payload ' + mb.toFixed(2) + ' MB', 'i');
+    if (mb > 8) log('  warning: over 8 MB — likely to be refused, try a smaller export', 'i');
     var attempt = 0;
     function go() {
       attempt++;
@@ -1849,8 +1851,10 @@ document.addEventListener('click', function(e){
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // proves to the Function that the caller is signed in to the tenant
-          'Authorization': 'Bearer ' + (accessToken || '')
+          // Sent twice on purpose: Static Web Apps consumes Authorization in
+          // some configurations before the Function sees it.
+          'Authorization': 'Bearer ' + (accessToken || ''),
+          'X-Xyn-Auth': (accessToken || '')
         },
         body: body
       })
@@ -2277,6 +2281,9 @@ JSON.stringify(slim) + '\n\n' +
 
   // ---------- build ----------
   document.getElementById('rp-buildBtn').addEventListener('click', function () {
+    // A build makes several calls over a few minutes; refresh first so the
+    // token cannot expire partway through.
+    if (typeof refreshTokenSilently === 'function') refreshTokenSilently(function () {});
     var m = meta();
     var active = SOURCES.filter(function (s) { return hasContent(s.id); });
     elLog.innerHTML = '';
