@@ -390,6 +390,19 @@ textarea.ob-notes:focus{outline:none;border-color:var(--accent)}
 .rp-opcls{font-family:var(--mono);font-size:9px;letter-spacing:.13em;text-transform:uppercase;
   color:var(--pd);margin-top:12px}
 
+/* ---- one-pager scope band ---- */
+.rp-scope{padding:22px 0 4px;border-bottom:1px solid var(--pl)}
+.rp-scope h4{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--pd);margin:0 0 13px;font-weight:500}
+.rp-scopegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:18px;padding-bottom:20px}
+.rp-scopegrid div{border-left:3px solid var(--xy-blue);padding-left:14px}
+.rp-scopegrid b{display:block;font-family:var(--disp);font-weight:700;font-size:30px;line-height:1;
+  letter-spacing:-.03em;color:var(--xy-blue);margin-bottom:5px}
+.rp-scopegrid span{font-size:11.5px;color:var(--pd);line-height:1.35;display:block}
+.rp-scopegrid em{font-family:var(--mono);font-style:normal;font-size:9px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--pd);display:block;margin-top:5px}
+.rp-opsteady{font-size:13.5px;line-height:1.55;color:#383D45;margin:0}
+
 /* ---- print: only the report sheet survives ---- */
 @media print{
   body{background:#fff}
@@ -1680,7 +1693,14 @@ document.addEventListener('click', function(e){
   // ---------- helpers ----------
   function log(m, c) { elLog.innerHTML += (c ? '<' + c + '>' + m + '</' + c + '>' : m) + '\n'; }
   function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
-  function esc(s) { return String(s == null ? '' : s).replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); }
+  // Also normalises dashes: model output occasionally contains them despite
+  // the prompt, and they read as machine-written in a client document.
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/\s*\u2014\s*/g, ', ')
+      .replace(/\s*\u2013\s*/g, ' to ')
+      .replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; });
+  }
   function txt(id) { var t = document.getElementById('rp-ta-' + id); return t ? t.value.trim() : ''; }
   function hasContent(id) { return txt(id).length > 0 || (files[id] || []).length > 0; }
   function hasPrior(id) { return (prior[id] || []).length > 0; }
@@ -1719,7 +1739,7 @@ document.addEventListener('click', function(e){
         '<div class="rp-files" id="rp-fl-' + s.id + '"></div>' +
         '<textarea class="card-notes-ta" id="rp-ta-' + s.id + '" placeholder="…or paste raw text" style="width:100%;height:56px"></textarea>' +
         '<div class="rp-hr"></div>' +
-        '<p class="rp-slot prior">Prior period — optional, enables comparison</p>' +
+        '<p class="rp-slot prior">Prior period (optional, enables comparison)</p>' +
         '<div class="rp-drop prior" id="rp-pz-' + s.id + '">Drop last month\'s report</div>' +
         '<input type="file" id="rp-pi-' + s.id + '" accept=".pdf,image/*" multiple hidden>' +
         '<div class="rp-files" id="rp-pl-' + s.id + '"></div>' +
@@ -1932,11 +1952,14 @@ document.addEventListener('click', function(e){
 '2. Vendor reports include generic industry threat-landscape content — global threat spotlights, ransomware news, analyst trend commentary. It is identical for every customer of the vendor and is NOT a finding about this client. Put it in "vendor_context" and nowhere else.\n' +
 '3. A clean period is a valid result. If there are no risks, return an empty findings array. Never manufacture a finding, and never convert benign or unescalated signals into risks — benign counts belong in metrics.\n' +
 '4. Reconcile the numbers. If a stated total disagrees with its own component breakdown, or two figures imply different population sizes, record it in "reconcile". If everything ties out, return an empty array.\n' +
-'5. Metric labels must be plain and stable, e.g. "events analyzed", "signals detected", "incidents reported", "entities protected". Use the same wording you would use for any month, so periods can be compared.\n\n' +
+'5. Write in plain sentences. Never use em dashes or en dashes; use a comma, a colon, a semicolon or a full stop instead.\n' +
+'6. If the report states how many devices, endpoints, servers or workstations are protected, put that number in "scope_devices" as a plain integer. If it states how many users, identities, mailboxes or seats are covered, put that in "scope_identities". Omit either if the report does not state it. Never estimate.\n' +
+'7. Metric labels must be plain and stable, e.g. "events analyzed", "signals detected", "incidents reported", "entities protected". Use the same wording you would use for any month, so periods can be compared.\n\n' +
 'Return ONLY a JSON object, no fences:\n' +
 '{"status":"one short clause","metrics":[{"value":"2.09M","label":"events analyzed"}],\n' +
 ' "findings":[{"severity":"critical|high|medium|low|info","title":"under 8 words","detail":"under 25 words"}],\n' +
-' "actions":["under 20 words"],"reconcile":["under 25 words"],"vendor_context":"2 sentences or empty string"}\n\n' +
+' "actions":["under 20 words"],"reconcile":["under 25 words"],"vendor_context":"2 sentences or empty string",\n' +
+' "scope_devices":0,"scope_identities":0}\n\n' +
 'Max 6 metrics, 4 findings, 3 actions, 3 reconcile notes.' +
 (pasted ? '\n\nPASTED TEXT:\n' + pasted.slice(0, 9000) : '');
     content.push({ type: 'text', text: prompt });
@@ -1983,7 +2006,8 @@ JSON.stringify(slim) + '\n\n' +
 '1. Use only the data above. Never invent a metric, event or trend.\n' +
 '2. A quiet month is a real outcome. Say the controls worked; do not imply danger the data does not show.\n' +
 '3. Where movement data exists, lead with the change rather than the raw count.\n' +
-'4. Where more than one source is present, say something the sources only reveal together rather than restating each tool in turn.';
+'4. Where more than one source is present, say something the sources only reveal together rather than restating each tool in turn.\n' +
+'5. Write in plain sentences. Never use em dashes or en dashes; use a comma, a colon, a semicolon or a full stop instead.';
 
     log('  writing narrative…');
     return callModel([{ type: 'text', text:
@@ -1998,8 +2022,8 @@ JSON.stringify(slim) + '\n\n' +
           log('  ranking risks and actions…');
           return callModel([{ type: 'text', text:
 'You are listing the risks and recommended actions for a client security report.\n\n' + header + '\n' +
-'5. If there are no risks, return an empty risks array. Never manufacture one to fill the section.\n' +
-'6. Every recommendation must follow from this client\'s own data, including "reconcile" data-quality items or services reporting nothing. Never pad with generic security advice — return fewer, or none.\n\n' +
+'6. If there are no risks, return an empty risks array. Never manufacture one to fill the section.\n' +
+'7. Every recommendation must follow from this client\'s own data, including "reconcile" data-quality items or services reporting nothing. Never pad with generic security advice — return fewer, or none.\n\n' +
 'Return ONLY a JSON object, no fences:\n' +
 '{"risks":[{"severity":"critical|high|medium|low","title":"under 8 words","detail":"under 25 words","source":"tool name"}],\n' +
 ' "recommendations":[{"title":"under 8 words","detail":"under 25 words","effort":"quick win|scheduled|project"}]}\n\n' +
@@ -2144,9 +2168,59 @@ JSON.stringify(slim) + '\n\n' +
     return { mets: mets, hero: heroPick(mets), risks: syn.risks || [], recs: syn.recommendations || [] };
   }
 
+  // Scope comes from the system of record for each figure rather than the
+  // largest number seen: Datto RMM is the device inventory, Huntress ITDR
+  // covers identities. Summing across vendors would triple-count, since the
+  // same endpoint and the same user appear in several tools.
+  var SCOPE_PREF = {
+    devices:    ['Datto RMM', 'Huntress', 'Microsoft 365 / Entra'],
+    identities: ['Huntress', 'Microsoft 365 / Entra', 'INKY']
+  };
+
+  function readScope(entry, kind) {
+    if (!entry) return null;
+    var field = kind === 'devices' ? entry.data.scope_devices : entry.data.scope_identities;
+    var v = parseInt(field, 10);
+    if (!isNaN(v) && v > 0) return v;
+    // fall back to this vendor's own metric labels
+    var rx = kind === 'devices'
+      ? /device|endpoint|workstation|server|machine/i
+      : /identit|user|mailbox|seat|account/i;
+    var best = null;
+    (entry.data.metrics || []).forEach(function (x) {
+      if (!rx.test(x.label)) return;
+      var n = num(x.value);
+      if (n !== null && (best === null || n > best)) best = n;
+    });
+    return best;
+  }
+
+  function scopeOf(bundle) {
+    function pick(kind) {
+      var order = SCOPE_PREF[kind];
+      for (var i = 0; i < order.length; i++) {
+        var entry = bundle.filter(function (b) { return b.name === order[i]; })[0];
+        var v = readScope(entry, kind);
+        if (v) return { value: Math.round(v), src: entry.name };
+      }
+      // nothing from a preferred source: take the largest anything reports
+      var best = null, src = '';
+      bundle.forEach(function (b) {
+        var v = readScope(b, kind);
+        if (v && (best === null || v > best)) { best = v; src = b.name; }
+      });
+      return best ? { value: Math.round(best), src: src } : null;
+    }
+    var d = pick('devices'), i = pick('identities');
+    return {
+      devices: d ? d.value : 0, devicesSrc: d ? d.src : '',
+      identities: i ? i.value : 0, identitiesSrc: i ? i.src : ''
+    };
+  }
+
   function paintSimple(syn, bundle, m) {
-    var D = derive(syn, bundle, m), S = m.sig;
-    var fmt = function (d) { return d ? new Date(d + 'T00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—'; };
+    var D = derive(syn, bundle, m), S = m.sig, SC = scopeOf(bundle);
+    var fmt = function (d) { return d ? new Date(d + 'T00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : ''; };
     var acts = [];
     bundle.forEach(function (b) { (b.data.actions || []).forEach(function (a) { acts.push(a); }); });
     var did = acts.slice(0, 3).map(function (a) { return a; });
@@ -2165,7 +2239,7 @@ JSON.stringify(slim) + '\n\n' +
 
     elSheet.innerHTML =
       '<div class="rp-ophead">' + LOGO_IMG +
-      '<div class="who"><b>' + esc(m.client) + '</b><span>' + fmt(m.from) + ' – ' + fmt(m.to) + '</span></div></div>' +
+      '<div class="who"><b>' + esc(m.client) + '</b><span>' + fmt(m.from) + ' to ' + fmt(m.to) + '</span></div></div>' +
       '<div class="rp-opin">' +
         '<div class="rp-verdict">' +
           '<div class="rp-flag ' + (clean ? 'ok' : 'act') + '">' + (clean ? 'All clear' : D.risks.length + ' item' + (D.risks.length > 1 ? 's' : '') + ' for you') + '</div>' +
@@ -2175,11 +2249,17 @@ JSON.stringify(slim) + '\n\n' +
         (D.hero.length ? '<div class="rp-hero">' + D.hero.map(function (x) {
           return '<div><b>' + esc(x.value) + '</b><span>' + esc(x.label) + '</span>' + (x.delta ? '<em>' + x.delta + '</em>' : '') + '</div>';
         }).join('') + '</div>' : '') +
+        (SC.devices || SC.identities ? '<div class="rp-scope"><h4>What we protect</h4><div class="rp-scopegrid">' +
+          (SC.devices ? '<div><b>' + SC.devices.toLocaleString() + '</b><span>devices monitored</span>' +
+            (SC.devicesSrc ? '<em>' + esc(SC.devicesSrc) + '</em>' : '') + '</div>' : '') +
+          (SC.identities ? '<div><b>' + SC.identities.toLocaleString() + '</b><span>user identities covered</span>' +
+            (SC.identitiesSrc ? '<em>' + esc(SC.identitiesSrc) + '</em>' : '') + '</div>' : '') +
+          '</div></div>' : '') +
         '<div class="rp-opcols">' +
-          '<div class="rp-opcol"><h4>What needs you</h4>' +
+          '<div class="rp-opcol"><h4>Where things stand</h4>' +
             (D.risks.length
-              ? '<ul>' + D.risks.slice(0, 3).map(function (r) { return '<li class="warn"><b>' + esc(r.title) + '</b>' + esc(r.detail) + '</li>'; }).join('') + '</ul>'
-              : '<p class="rp-opnone">Nothing. No incidents, no confirmed threats, and no action is outstanding on your side this period.</p>') +
+              ? '<p class="rp-opsteady">Your protection is running as expected. A small number of routine maintenance items came up this period. These are handled by our team as part of your service and are detailed in the technical report held by your IT contact.</p>'
+              : '<p class="rp-opnone">Nothing needs your attention. No incidents, no confirmed threats, and no action is outstanding on your side this period.</p>') +
           '</div>' +
           '<div class="rp-opcol"><h4>What we did</h4><ul>' +
             did.slice(0, 3).map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') +
@@ -2197,8 +2277,8 @@ JSON.stringify(slim) + '\n\n' +
 
   function paintFull(syn, bundle, m) {
     var D = derive(syn, bundle, m), S = m.sig;
-    var fmt = function (d) { return d ? new Date(d + 'T00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '—'; };
-    var grade = POSTURE[(syn.posture || '').toLowerCase()] || '—';
+    var fmt = function (d) { return d ? new Date(d + 'T00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : ''; };
+    var grade = POSTURE[(syn.posture || '').toLowerCase()] || '?';
     var notes = [];
     bundle.forEach(function (b) { (b.data.reconcile || []).forEach(function (n) { notes.push({ n: n, src: b.name }); }); });
     var ctx = bundle.filter(function (b) { return (b.data.vendor_context || '').trim(); });
@@ -2211,7 +2291,7 @@ JSON.stringify(slim) + '\n\n' +
       '<div class="rp-cover"><div class="bar"></div><div class="in">' +
         '<div class="kick">Security Operations Report</div>' +
         '<h1>' + esc(m.client) + '</h1>' +
-        '<div class="per">' + fmt(m.from) + ' &nbsp;—&nbsp; ' + fmt(m.to) + '</div>' +
+        '<div class="per">' + fmt(m.from) + ' to ' + fmt(m.to) + '</div>' +
         '<div class="rule"></div>' +
         '<div class="meta">' + (m.tenant ? 'Tenant &nbsp;' + esc(m.tenant) + '<br>' : '') +
           'Sources consolidated &nbsp;' + bundle.length + '<br>' +
@@ -2230,7 +2310,7 @@ JSON.stringify(slim) + '\n\n' +
           return '<div><b>' + esc(x.value) + '</b><span>' + esc(x.label) + '</span>' + (x.delta ? '<em>' + x.delta + '</em>' : '') + '</div>';
         }).join('') + '</div>' : '') +
         (barRows.length ? '<h3 class="sec">Movement against last period</h3><div class="rp-viz">' + svgBars(barRows) + '</div>' +
-          '<p class="rp-cap">Direction is shown without judgement — a rise in blocked email is favourable, a rise in incidents is not.</p>' : '') +
+          '<p class="rp-cap">Direction is shown without judgement. A rise in blocked email is favourable; a rise in incidents is not.</p>' : '') +
         (funnels.length ? '<h3 class="sec">How the noise was filtered</h3>' +
           funnels.map(function (f) { return '<p class="rp-vt">' + esc(f.name) + '</p><div class="rp-viz">' + svgFunnel(f.rows) + '</div>'; }).join('') +
           '<p class="rp-cap">Each stage narrows the volume that reaches a human analyst. The final figure is what actually required your attention.</p>' : '') +
@@ -2250,7 +2330,7 @@ JSON.stringify(slim) + '\n\n' +
         '<h3 class="sec">Detail by service</h3>' +
         bundle.map(function (b) {
           return '<div class="rp-block"><h4>' + esc(b.name) + '</h4>' +
-            '<div class="st">' + esc(b.tag) + ' — ' + esc(b.data.status || '') + '</div>' +
+            '<div class="st">' + esc(b.tag) + '. ' + esc(b.data.status || '') + '</div>' +
             (b.data.findings || []).map(function (f) {
               return '<div class="rp-find"><div class="rp-sev ' + esc((f.severity || 'info').toLowerCase()) + '">' + esc(f.severity) + '</div>' +
                 '<div><h4>' + esc(f.title) + '</h4><p>' + esc(f.detail) + '</p></div></div>';
@@ -2371,7 +2451,7 @@ JSON.stringify(slim) + '\n\n' +
       } catch (e) { }
     });
     return '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' +
-      esc(lastReport.m.client) + ' — Security Report</title><style>' +
+      esc(lastReport.m.client) + ' Security Report</title><style>' +
       'body{margin:0;background:#fff;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif}' +
       '.rp-sheet{max-width:860px;margin:0 auto;box-shadow:none}' + css +
       '</style></head><body><div class="rp-sheet">' + elSheet.innerHTML + '</div></body></html>';
