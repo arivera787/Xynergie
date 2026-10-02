@@ -7,23 +7,24 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0f1117;--surface:#181c27;--surface2:#1e2333;
-  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.18);
-  --text:#e8eaf2;--text2:#8b90a8;--text3:#555b74;
-  --accent:#4f9cf9;--adim:rgba(79,156,249,0.12);
-  --green:#3ecf8e;--gdim:rgba(62,207,142,0.12);
-  --amber:#f5a623;--qdim:rgba(245,166,35,0.12);
-  --purple:#a78bfa;--pdim:rgba(167,139,250,0.12);
-  --red:#f56565;--rdim:rgba(245,101,101,0.12);
-  --font:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
-  --mono:'Courier New',Courier,monospace;
-  --r:8px;--rl:12px;
+  --bg:#f5f5f5;--surface:#ffffff;--surface2:#fafafa;
+  --border:#e8e8e8;--border2:#d1d1d1;
+  --text:#242424;--text2:#424242;--text3:#707070;
+  --accent:#0f6cbd;--adim:rgba(15,108,189,0.08);
+  --green:#107c10;--gdim:rgba(16,124,16,0.08);
+  --amber:#bc4b09;--qdim:rgba(188,75,9,0.08);
+  --purple:#5c2e91;--pdim:rgba(92,46,145,0.08);
+  --red:#c50f1f;--rdim:rgba(197,15,31,0.08);
+  --font:'Segoe UI','Segoe UI Web (West European)',-apple-system,BlinkMacSystemFont,Roboto,'Helvetica Neue',sans-serif;
+  --mono:var(--font);
+  --shadow:0 1px 2px rgba(0,0,0,0.06),0 1px 3px rgba(0,0,0,0.08);
+  --r:4px;--rl:8px;
 }
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh}
 .shell{max-width:1100px;margin:0 auto;padding:0 1.25rem 2rem}
 
 /* ===== Top-level Tab Bar ===== */
-.tabbar{display:flex;gap:4px;padding:14px 1.25rem 0;max-width:1100px;margin:0 auto}
+.tabbar{display:flex;gap:4px;padding:8px max(1.25rem,calc((100% - 1100px) / 2 + 1.25rem)) 0;background:var(--surface);border-bottom:1px solid var(--border);margin-bottom:0.5rem}
 .tabbtn{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;
   color:var(--text3);background:none;border:none;border-bottom:2px solid transparent;
   padding:10px 4px;margin-right:22px;cursor:pointer;transition:color .15s,border-color .15s}
@@ -39,11 +40,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .date-lbl{font-family:var(--mono);font-size:11px;color:var(--text3);margin-top:2px}
 .header-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .user-badge{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border2);border-radius:99px;padding:4px 12px 4px 6px}
-.user-avatar{width:22px;height:22px;border-radius:50%;background:var(--adim);border:1px solid rgba(79,156,249,0.3);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--accent)}
+.user-avatar{width:22px;height:22px;border-radius:50%;background:var(--adim);border:1px solid rgba(15,108,189,0.3);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--accent)}
 .user-name{font-family:var(--mono);font-size:11px;color:var(--text2)}
 .reset-btn{font-family:var(--mono);font-size:11px;color:var(--text3);background:none;border:1px solid var(--border2);border-radius:var(--r);padding:5px 12px;cursor:pointer}
 .reset-btn:hover{color:var(--text2)}
-.save-btn{font-family:var(--mono);font-size:11px;color:#0f1117;background:var(--green);border:none;border-radius:var(--r);padding:5px 14px;cursor:pointer;font-weight:700;display:flex;align-items:center;gap:5px}
+.save-btn{font-family:var(--mono);font-size:11px;color:#fff;background:var(--green);border:none;border-radius:var(--r);padding:5px 14px;cursor:pointer;font-weight:700;display:flex;align-items:center;gap:5px}
 .save-btn:disabled{opacity:0.45;cursor:not-allowed}
 .save-status{font-family:var(--mono);font-size:10px}
 .save-status.ok{color:var(--green)}.save-status.err{color:var(--red)}.save-status.ing{color:var(--accent)}
@@ -68,7 +69,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 @media(max-width:700px){.grid{grid-template-columns:1fr}}
 
 /* Card */
-.card{background:var(--surface);border:1px solid var(--border2);border-radius:var(--rl);display:flex;flex-direction:column;overflow:hidden;transition:opacity 0.2s}
+.card{background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow);border-radius:var(--rl);display:flex;flex-direction:column;overflow:hidden;transition:opacity 0.2s}
 .card.na{opacity:0.4;pointer-events:none}
 .card.na .card-hdr{pointer-events:all}
 
@@ -85,7 +86,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .pill-bak{background:var(--rdim);color:var(--red)}
 .card-title{font-size:11px;font-weight:600;color:var(--text2);letter-spacing:0.04em;flex:1}
 .card-badge{font-family:var(--mono);font-size:10px;padding:1px 7px;border-radius:99px;border:1px solid var(--border2);color:var(--text3)}
-.card-badge.done{color:var(--green);border-color:rgba(62,207,142,0.35);background:var(--gdim)}
+.card-badge.done{color:var(--green);border-color:rgba(16,124,16,0.35);background:var(--gdim)}
 
 /* N/A toggle */
 .na-toggle{display:flex;align-items:center;gap:5px;cursor:pointer;flex-shrink:0}
@@ -107,7 +108,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .card-body{flex:1}
 .task{display:flex;align-items:flex-start;gap:10px;padding:8px 12px;border-bottom:1px solid var(--border);cursor:pointer}
 .task:last-child{border-bottom:none}
-.task:hover{background:rgba(255,255,255,0.02)}
+.task:hover{background:rgba(0,0,0,0.03)}
 .cb{width:15px;height:15px;flex-shrink:0;border:1.5px solid var(--border2);border-radius:3px;display:flex;align-items:center;justify-content:center;margin-top:1px}
 .cb.on{background:var(--gdim);border-color:var(--green)}
 .ck{display:none}
@@ -120,8 +121,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .card-notes.open{display:block}
 .card-notes-input-row{display:flex;gap:6px;margin-bottom:8px}
 .card-notes-ta{flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r);color:var(--text);font-family:var(--font);font-size:12px;padding:6px 8px;resize:none;height:52px;outline:none;line-height:1.4}
-.card-notes-ta:focus{border-color:rgba(167,139,250,0.5)}
-.card-notes-add{background:var(--pdim);border:1px solid rgba(167,139,250,0.35);border-radius:var(--r);color:var(--purple);font-family:var(--mono);font-size:10px;padding:6px 10px;cursor:pointer;white-space:nowrap;align-self:flex-start}
+.card-notes-ta:focus{border-color:rgba(92,46,145,0.5)}
+.card-notes-add{background:var(--pdim);border:1px solid rgba(92,46,145,0.35);border-radius:var(--r);color:var(--purple);font-family:var(--mono);font-size:10px;padding:6px 10px;cursor:pointer;white-space:nowrap;align-self:flex-start}
 .card-notes-list{max-height:140px;overflow-y:auto}
 .card-note-item{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);align-items:flex-start}
 .card-note-item:last-child{border-bottom:none}
@@ -132,17 +133,17 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .card-notes-empty{font-family:var(--mono);font-size:10px;color:var(--text3);text-align:center;padding:6px 0}
 
 /* Ticket bar */
-.ticket-rect{background:var(--surface);border:1px solid var(--border2);border-radius:var(--rl);padding:12px 14px;margin-bottom:1.5rem}
+.ticket-rect{background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow);border-radius:var(--rl);padding:12px 14px;margin-bottom:1.5rem}
 .ticket-rect-hdr{display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .ticket-rect-label{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:0.08em}
 .ticket-fields{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start}
 .ticket-input{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r);color:var(--text);font-family:var(--font);font-size:12px;padding:7px 10px;outline:none}
-.ticket-input:focus{border-color:rgba(79,156,249,0.5)}
+.ticket-input:focus{border-color:rgba(15,108,189,0.5)}
 .ticket-select{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r);color:var(--text2);font-family:var(--mono);font-size:11px;padding:7px 8px;cursor:pointer;outline:none}
 .ticket-select option{background:var(--surface2)}
 .ticket-textarea{flex:1;min-width:180px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r);color:var(--text);font-family:var(--font);font-size:12px;padding:7px 10px;resize:none;height:34px;outline:none}
-.ticket-textarea:focus{border-color:rgba(79,156,249,0.5)}
-.ticket-submit{background:var(--amber);border:none;border-radius:var(--r);color:#0f1117;font-family:var(--mono);font-size:11px;font-weight:700;padding:7px 16px;cursor:pointer;white-space:nowrap}
+.ticket-textarea:focus{border-color:rgba(15,108,189,0.5)}
+.ticket-submit{background:var(--amber);border:none;border-radius:var(--r);color:#fff;font-family:var(--mono);font-size:11px;font-weight:700;padding:7px 16px;cursor:pointer;white-space:nowrap}
 .ticket-submit:disabled{opacity:0.45;cursor:not-allowed}
 .ticket-status{font-family:var(--mono);font-size:10px;margin-top:6px}
 .ticket-status.ok{color:var(--green)}.ticket-status.err{color:var(--red)}.ticket-status.ing{color:var(--accent)}
@@ -151,7 +152,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .footer{text-align:center;font-family:var(--mono);font-size:10px;color:var(--text3);padding:0.5rem 0 1.5rem}
 @media(max-width:600px){.portal-btn span{display:none}}
 
-/* ===== Onboarding tab (namespaced ob- to avoid clashing) ===== */
+/* ===== Shared form styles (ob- prefix, used by Client Reports) ===== */
 .ob-field-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px 16px}
 @media(max-width:700px){.ob-field-grid{grid-template-columns:1fr}}
 .ob-field label{display:block;font-family:var(--mono);font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px}
@@ -167,7 +168,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 @media(max-width:700px){.ob-product-grid{grid-template-columns:repeat(2,1fr)}}
 .ob-product-item{display:flex;align-items:center;gap:9px;padding:11px 12px;border:1px solid var(--border);border-radius:var(--r);background:var(--bg);cursor:pointer;transition:border-color .15s,background .15s}
 .ob-product-item:hover{border-color:var(--border2)}
-.ob-product-item.checked{background:var(--gdim);border-color:rgba(62,207,142,0.35)}
+.ob-product-item.checked{background:var(--gdim);border-color:rgba(16,124,16,0.35)}
 .ob-product-item .cb{width:15px;height:15px;flex-shrink:0;border:1.5px solid var(--border2);border-radius:3px;display:flex;align-items:center;justify-content:center}
 .ob-product-item.checked .cb{background:var(--gdim);border-color:var(--green)}
 .ob-product-item .cb svg{display:none;width:9px;height:9px}
@@ -176,7 +177,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 
 .ob-pill-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
 .ob-pill-check{display:flex;align-items:center;gap:7px;padding:9px 16px;border:1.5px solid var(--border2);border-radius:99px;cursor:pointer;font-size:13px;font-weight:600;background:var(--surface2);color:var(--text2);transition:.15s}
-.ob-pill-check.checked{background:var(--accent);color:#0f1117;border-color:var(--accent)}
+.ob-pill-check.checked{background:var(--accent);color:#fff;border-color:var(--accent)}
 
 .ob-card-body{padding:16px}
 .ob-sig-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -184,8 +185,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .ob-action-bar{display:flex;justify-content:flex-end;gap:10px;margin-top:0.5rem}
 .ob-btn{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:0.04em;padding:9px 16px;border-radius:var(--r);border:1px solid var(--border2);background:var(--surface);color:var(--text2);cursor:pointer}
 .ob-btn:hover{border-color:var(--accent);color:var(--accent)}
-.ob-btn.primary{background:var(--green);color:#0f1117;border-color:var(--green);font-weight:700}
-.ob-btn.primary:hover{opacity:0.9;color:#0f1117}
+.ob-btn.primary{background:var(--green);color:#fff;border-color:var(--green);font-weight:700}
+.ob-btn.primary:hover{opacity:0.9;color:#fff}
 .ob-btn.primary:disabled{opacity:0.45;cursor:not-allowed}
 .ob-btn.danger:hover{border-color:var(--red);color:var(--red)}
 textarea.ob-notes{width:100%;min-height:70px;padding:10px;border:1px solid var(--border2);border-radius:var(--r);font-family:var(--font);font-size:13px;color:var(--text);background:var(--surface2);resize:vertical}
@@ -232,12 +233,16 @@ textarea.ob-notes:focus{outline:none;border-color:var(--accent)}
 
 /* ---- output shell ---- */
 .rp-toolbar{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+.rp-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.rp-chips button{font-family:var(--font);font-size:11.5px;color:var(--text2);background:var(--surface);border:1px solid var(--border2);border-radius:99px;padding:4px 10px;cursor:pointer}
+.rp-chips button:hover{border-color:var(--accent);color:var(--accent)}
+.rp-hint{font-size:11px;color:var(--text3);margin-top:6px;line-height:1.4}
 .rp-tabs{display:flex;margin-right:auto}
 .rp-tabs button{border:1px solid var(--border2);background:var(--surface);font-family:var(--mono);
   font-size:11px;padding:7px 13px;cursor:pointer;color:var(--text3)}
 .rp-tabs button:first-child{border-radius:var(--r) 0 0 var(--r)}
 .rp-tabs button:last-child{border-radius:0 var(--r) var(--r) 0;border-left:0}
-.rp-tabs button.on{background:var(--accent);border-color:var(--accent);color:#0f1117;font-weight:700}
+.rp-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
 .rp-empty{padding:40px 30px;color:var(--text3)}
 .rp-empty h2{font-size:18px;color:var(--text);margin:0 0 8px;font-weight:600}
 .rp-empty p{font-size:13px;line-height:1.6;max-width:44ch}
@@ -403,11 +408,24 @@ textarea.ob-notes:focus{outline:none;border-color:var(--accent)}
   text-transform:uppercase;color:var(--pd);display:block;margin-top:5px}
 .rp-opsteady{font-size:13.5px;line-height:1.55;color:#383D45;margin:0}
 
+/* ===== New Ticket tab (tn-) ===== */
+.tn-layout{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:1rem;align-items:start}
+@media(max-width:860px){.tn-layout{grid-template-columns:1fr}}
+.tn-layout .card{margin-bottom:1rem}
+.tn-props{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px}
+@media(max-width:480px){.tn-props{grid-template-columns:1fr}}
+.tn-props .ob-field:last-child{grid-column:1/-1}
+.ob-field input.tn-bad,.ob-field textarea.tn-bad{border-color:var(--red)}
+.tn-row{display:flex;gap:8px;align-items:baseline;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px}
+.tn-row:last-child{border-bottom:none}
+.tn-row time{font-family:var(--mono);font-size:9px;color:var(--accent);flex-shrink:0}
+.tn-row span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
+
 /* ---- print: only the report sheet survives ---- */
 @media print{
   body{background:#fff}
   .tabbar,.header,.prog-wrap,.portals,.ticket-rect,.footer,
-  .rp-console,.rp-toolbar,#tabDaily,#tabOnboarding{display:none!important}
+  .rp-console,.rp-toolbar,#tabDaily,#tabTickets{display:none!important}
   .shell{max-width:none;padding:0}
   .rp-layout{display:block}
   .rp-sheet{box-shadow:none;border-radius:0;min-height:0}
@@ -422,12 +440,161 @@ textarea.ob-notes:focus{outline:none;border-color:var(--accent)}
 <body>
 
 <div class="tabbar">
-  <button class="tabbtn active" data-tab="daily">Daily Checklist</button>
-  <button class="tabbtn" data-tab="onboarding">Onboarding</button>
+  <button class="tabbtn active" data-tab="tickets">New Ticket</button>
+  <button class="tabbtn" data-tab="daily">Daily Checklist</button>
   <button class="tabbtn" data-tab="reports">Client Reports</button>
 </div>
 
-<div class="tabpanel active" id="tabDaily">
+<div class="tabpanel active" id="tabTickets">
+<div class="shell">
+
+  <div class="header">
+    <div class="header-left">
+      <div>
+        <div class="page-title">New Ticket</div>
+        <div class="date-lbl" id="tn-dl"></div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="user-badge">
+        <div class="user-avatar" id="tn-user-avatar">--</div>
+        <span class="user-name" id="tn-user-name">Signing in...</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tn-layout">
+    <div>
+      <div class="card">
+        <div class="card-hdr">
+          <span class="card-pill" style="background:var(--adim);color:var(--accent)">WHO</span>
+          <span class="card-title">Requester</span>
+        </div>
+        <div class="ob-card-body">
+          <div class="ob-field-grid">
+            <div class="ob-field">
+              <label for="tn-email">Requester email *</label>
+              <input type="email" id="tn-email" list="tn-recent-emails" placeholder="name@client.com" autocomplete="off">
+              <datalist id="tn-recent-emails"></datalist>
+            </div>
+            <div class="ob-field">
+              <label for="tn-name">Requester name</label>
+              <input type="text" id="tn-name" placeholder="Used if this is a new contact">
+            </div>
+            <div class="ob-field">
+              <label for="tn-phone">Phone</label>
+              <input type="text" id="tn-phone" placeholder="(787) 000-0000">
+            </div>
+            <div class="ob-field">
+              <label for="tn-cc">CC emails</label>
+              <input type="text" id="tn-cc" placeholder="Comma separated">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hdr">
+          <span class="card-pill" style="background:var(--qdim);color:var(--amber)">TKT</span>
+          <span class="card-title">Ticket</span>
+        </div>
+        <div class="ob-card-body">
+          <div class="ob-field" style="margin-bottom:12px">
+            <label for="tn-subject">Subject *</label>
+            <input type="text" id="tn-subject" placeholder="Short summary of the issue">
+          </div>
+          <div class="ob-field" style="margin-bottom:12px">
+            <label for="tn-desc">Description *</label>
+            <textarea class="ob-notes" id="tn-desc" style="min-height:150px" placeholder="What happened, who is affected, steps already taken..."></textarea>
+          </div>
+          <div class="ob-field">
+            <label>Attachments</label>
+            <div class="rp-drop" id="tn-drop">Drop files here, or click to choose (max 20 MB total)</div>
+            <input type="file" id="tn-file" multiple hidden>
+            <div class="rp-files" id="tn-files" style="margin-top:6px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div class="card-hdr">
+          <span class="card-pill" style="background:var(--pdim);color:var(--purple)">SET</span>
+          <span class="card-title">Properties</span>
+        </div>
+        <div class="ob-card-body">
+          <div class="tn-props">
+            <div class="ob-field">
+              <label for="tn-priority">Priority</label>
+              <select id="tn-priority">
+                <option value="1">Low</option>
+                <option value="2" selected>Medium</option>
+                <option value="3">High</option>
+                <option value="4">Urgent</option>
+              </select>
+            </div>
+            <div class="ob-field">
+              <label for="tn-status">Status</label>
+              <select id="tn-status">
+                <option value="2" selected>Open</option>
+                <option value="3">Pending</option>
+                <option value="4">Resolved</option>
+                <option value="5">Closed</option>
+              </select>
+            </div>
+            <div class="ob-field">
+              <label for="tn-source">Source</label>
+              <select id="tn-source">
+                <option value="7" selected>Internal</option>
+                <option value="3">Phone</option>
+                <option value="1">Email</option>
+                <option value="2">Portal</option>
+                <option value="9">Walk-in</option>
+              </select>
+            </div>
+            <div class="ob-field">
+              <label for="tn-type">Type</label>
+              <select id="tn-type"><option value="">None</option></select>
+            </div>
+            <div class="ob-field">
+              <label for="tn-group">Group</label>
+              <select id="tn-group"><option value="">Unassigned</option></select>
+            </div>
+            <div class="ob-field">
+              <label for="tn-agent">Agent</label>
+              <select id="tn-agent"><option value="">Unassigned</option></select>
+            </div>
+            <div class="ob-field">
+              <label for="tn-tags">Tags</label>
+              <input type="text" id="tn-tags" placeholder="Comma separated">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ob-action-bar">
+        <button class="ob-btn danger" id="tn-clearBtn">&#8635; Clear</button>
+        <button class="ob-btn primary" id="tn-submit">+ Create Ticket</button>
+      </div>
+      <div class="ticket-status" id="tn-msg" style="text-align:right"></div>
+
+      <div class="card" style="margin-top:1rem">
+        <div class="card-hdr">
+          <span class="card-pill" style="background:var(--gdim);color:var(--green)">LOG</span>
+          <span class="card-title">Created today</span>
+          <span class="card-badge" id="tn-count">0</span>
+        </div>
+        <div class="ob-card-body" id="tn-recent"><div class="card-notes-empty">No tickets created yet today</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">creates tickets in xynergie.freshdesk.com &middot; xynergie msp ops</div>
+</div>
+</div><!-- /tabTickets -->
+
+<div class="tabpanel" id="tabDaily">
 <div class="shell">
 
   <div class="header">
@@ -445,7 +612,7 @@ textarea.ob-notes:focus{outline:none;border-color:var(--accent)}
       </div>
       <button class="reset-btn" id="resetBtn">&#8635; reset</button>
       <button class="save-btn" id="saveBtn" disabled>
-        <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 10h8M6 2v6M3.5 5.5L6 8l2.5-2.5" stroke="#0f1117" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 10h8M6 2v6M3.5 5.5L6 8l2.5-2.5" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Save Log
       </button>
     </div>
@@ -460,31 +627,31 @@ textarea.ob-notes:focus{outline:none;border-color:var(--accent)}
   <div class="portals">
     <span class="portals-label">Quick Access</span>
     <a class="portal-btn" href="https://xynergie-corp.huntress.io/login" target="_blank">
-      <svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="rgba(62,207,142,0.15)"/><path d="M12 5v14M7 9l5-4 5 4M7 15l5 4 5-4" stroke="#3ecf8e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="rgba(16,124,16,0.15)"/><path d="M12 5v14M7 9l5-4 5 4M7 15l5 4 5-4" stroke="#107c10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <span>Huntress</span>
     </a>
     <a class="portal-btn" href="https://one.kaseya.com/home/dashboard" target="_blank">
-      <svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="rgba(79,156,249,0.15)"/><path d="M4 6h16M4 12h16M4 18h10" stroke="#4f9cf9" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="rgba(15,108,189,0.15)"/><path d="M4 6h16M4 12h16M4 18h10" stroke="#0f6cbd" stroke-width="1.8" stroke-linecap="round"/></svg>
       <span>Kaseya</span>
     </a>
     <a class="portal-btn" href="https://xynergie.freshdesk.com/" target="_blank">
-      <svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="rgba(62,207,142,0.15)"/><circle cx="12" cy="12" r="8" stroke="#3ecf8e" stroke-width="1.8"/><path d="M9 10a3 3 0 116 0c0 2-3 3-3 5M12 19h.01" stroke="#3ecf8e" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="rgba(16,124,16,0.15)"/><circle cx="12" cy="12" r="8" stroke="#107c10" stroke-width="1.8"/><path d="M9 10a3 3 0 116 0c0 2-3 3-3 5M12 19h.01" stroke="#107c10" stroke-width="1.8" stroke-linecap="round"/></svg>
       <span>Freshdesk</span>
     </a>
     <a class="portal-btn" href="https://app.mindsalt.com/login" target="_blank">
-      <svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="rgba(167,139,250,0.15)"/><path d="M12 3c-5 0-8 3-8 9s3 9 8 9 8-3 8-9-3-9-8-9zm0 5v4l3 2" stroke="#a78bfa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="rgba(92,46,145,0.15)"/><path d="M12 3c-5 0-8 3-8 9s3 9 8 9 8-3 8-9-3-9-8-9zm0 5v4l3 2" stroke="#5c2e91" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <span>MindSalt</span>
     </a>
     <a class="portal-btn" href="https://login.microsoftonline.com/" target="_blank">
-      <svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="rgba(79,156,249,0.15)"/><rect x="4" y="4" width="7" height="7" rx="1" stroke="#4f9cf9" stroke-width="1.8"/><rect x="13" y="4" width="7" height="7" rx="1" stroke="#4f9cf9" stroke-width="1.8"/><rect x="4" y="13" width="7" height="7" rx="1" stroke="#4f9cf9" stroke-width="1.8"/><rect x="13" y="13" width="7" height="7" rx="1" stroke="#4f9cf9" stroke-width="1.8"/></svg>
+      <svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="rgba(15,108,189,0.15)"/><rect x="4" y="4" width="7" height="7" rx="1" stroke="#0f6cbd" stroke-width="1.8"/><rect x="13" y="4" width="7" height="7" rx="1" stroke="#0f6cbd" stroke-width="1.8"/><rect x="4" y="13" width="7" height="7" rx="1" stroke="#0f6cbd" stroke-width="1.8"/><rect x="13" y="13" width="7" height="7" rx="1" stroke="#0f6cbd" stroke-width="1.8"/></svg>
       <span>M365 Admin</span>
     </a>
     <a class="portal-btn" href="https://portal.azure.com" target="_blank">
-      <svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="rgba(79,156,249,0.15)"/><path d="M13 3L4 14h7l-2 7 11-11h-7l2-7z" stroke="#4f9cf9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="rgba(15,108,189,0.15)"/><path d="M13 3L4 14h7l-2 7 11-11h-7l2-7z" stroke="#0f6cbd" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <span>Azure</span>
     </a>
     <a class="portal-btn" href="https://xynergieholdings.sharepoint.com" target="_blank">
-      <svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="rgba(62,207,142,0.15)"/><circle cx="10" cy="10" r="5" stroke="#3ecf8e" stroke-width="1.8"/><circle cx="15" cy="15" r="4" stroke="#3ecf8e" stroke-width="1.8"/></svg>
+      <svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="rgba(16,124,16,0.15)"/><circle cx="10" cy="10" r="5" stroke="#107c10" stroke-width="1.8"/><circle cx="15" cy="15" r="4" stroke="#107c10" stroke-width="1.8"/></svg>
       <span>SharePoint</span>
     </a>
   </div>
@@ -493,7 +660,7 @@ textarea.ob-notes:focus{outline:none;border-color:var(--accent)}
 
   <div class="ticket-rect">
     <div class="ticket-rect-hdr">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect width="14" height="14" rx="3" fill="rgba(245,166,35,0.15)"/><path d="M2 4h10M2 7h7M2 10h5" stroke="#f5a623" stroke-width="1.3" stroke-linecap="round"/></svg>
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect width="14" height="14" rx="3" fill="rgba(188,75,9,0.15)"/><path d="M2 4h10M2 7h7M2 10h5" stroke="#bc4b09" stroke-width="1.3" stroke-linecap="round"/></svg>
       <span class="ticket-rect-label">New Freshdesk Ticket</span>
     </div>
     <div class="ticket-fields">
@@ -521,151 +688,6 @@ textarea.ob-notes:focus{outline:none;border-color:var(--accent)}
 </div>
 
 </div><!-- /tabDaily -->
-
-<div class="tabpanel" id="tabOnboarding">
-<div class="shell">
-
-  <div class="header">
-    <div class="header-left">
-      <div>
-        <div class="page-title">Client Onboarding</div>
-        <div class="date-lbl" id="ob-dl"></div>
-      </div>
-    </div>
-    <div class="header-right">
-      <div class="save-status" id="ob-save-status"></div>
-      <div class="user-badge">
-        <div class="user-avatar" id="ob-user-avatar">--</div>
-        <span class="user-name" id="ob-user-name">Signing in...</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="prog-wrap">
-    <span class="prog-lbl">PROGRESS</span>
-    <div class="prog-track"><div class="prog-fill" id="ob-pf"></div></div>
-    <span class="prog-count" id="ob-pc">0% complete</span>
-  </div>
-
-  <!-- CLIENT INFO -->
-  <div class="card">
-    <div class="card-hdr">
-      <span class="card-pill" style="background:var(--adim);color:var(--accent)">INFO</span>
-      <span class="card-title">Client &amp; Contract Information</span>
-    </div>
-    <div class="ob-card-body">
-      <div class="ob-field-grid">
-        <div class="ob-field">
-          <label for="ob-clientName">Client / Company Name</label>
-          <input type="text" id="ob-clientName" placeholder="e.g. Custom Group PR">
-        </div>
-        <div class="ob-field">
-          <label for="ob-primaryContact">Primary Contact</label>
-          <input type="text" id="ob-primaryContact" placeholder="Name &amp; title">
-        </div>
-        <div class="ob-field">
-          <label for="ob-contactEmail">Contact Email</label>
-          <input type="email" id="ob-contactEmail" placeholder="name@client.com">
-        </div>
-        <div class="ob-field">
-          <label for="ob-contactPhone">Contact Phone</label>
-          <input type="text" id="ob-contactPhone" placeholder="(787) 000-0000">
-        </div>
-        <div class="ob-field">
-          <label for="ob-contractDate">Contract Closed Date</label>
-          <input type="date" id="ob-contractDate">
-        </div>
-        <div class="ob-field">
-          <label for="ob-onboardOwner">Onboarding Owner</label>
-          <input type="text" id="ob-onboardOwner" placeholder="e.g. Dre">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PRODUCTS -->
-  <div class="card">
-    <div class="card-hdr">
-      <span class="card-pill" style="background:var(--gdim);color:var(--green)">PROD</span>
-      <span class="card-title">Products &amp; Programs</span>
-      <span class="card-badge" id="ob-prodBadge">0 / 10</span>
-    </div>
-    <div class="ob-card-body">
-      <div class="ob-product-grid" id="ob-productGrid"></div>
-    </div>
-  </div>
-
-  <!-- SERVICE TYPE -->
-  <div class="card">
-    <div class="card-hdr">
-      <span class="card-pill" style="background:var(--pdim);color:var(--purple)">SVC</span>
-      <span class="card-title">Service Type &amp; Visit Cadence</span>
-    </div>
-    <div class="ob-card-body">
-      <div class="ob-pill-row" id="ob-serviceTypeRow"></div>
-      <div class="ob-field-grid">
-        <div class="ob-field">
-          <label for="ob-visitFrequency">Visit Frequency</label>
-          <select id="ob-visitFrequency">
-            <option value="">— Select —</option>
-            <option>Weekly</option>
-            <option>Bi-weekly</option>
-            <option>Monthly</option>
-            <option>Quarterly</option>
-            <option>On-demand / As needed</option>
-            <option>N/A — No services</option>
-          </select>
-        </div>
-        <div class="ob-field">
-          <label for="ob-monthlyVisit">Monthly Visit Day / Notes</label>
-          <input type="text" id="ob-monthlyVisit" placeholder="e.g. 1st Tuesday of each month">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- NOTES -->
-  <div class="card">
-    <div class="card-hdr">
-      <span class="card-pill" style="background:var(--qdim);color:var(--amber)">NOTE</span>
-      <span class="card-title">Onboarding Notes</span>
-    </div>
-    <div class="ob-card-body">
-      <textarea class="ob-notes" id="ob-notes" placeholder="Special requirements, escalation contacts, network details, exceptions, etc."></textarea>
-    </div>
-  </div>
-
-  <!-- SIGN OFF -->
-  <div class="card">
-    <div class="card-hdr">
-      <span class="card-pill" style="background:var(--rdim);color:var(--red)">SIGN</span>
-      <span class="card-title">Sign-Off</span>
-    </div>
-    <div class="ob-card-body">
-      <div class="ob-sig-grid">
-        <div class="ob-field">
-          <label for="ob-sigInternal">Xynergie Representative</label>
-          <input type="text" id="ob-sigInternal" placeholder="Type name to sign">
-        </div>
-        <div class="ob-field">
-          <label for="ob-sigDate">Date Completed</label>
-          <input type="date" id="ob-sigDate">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="ob-action-bar">
-    <button class="ob-btn danger" id="ob-resetBtn">&#8635; Clear Form</button>
-    <button class="ob-btn primary" id="ob-saveBtn" disabled>
-      <svg width="11" height="11" viewBox="0 0 12 12" fill="none" style="vertical-align:-1px;margin-right:4px"><path d="M2 10h8M6 2v6M3.5 5.5L6 8l2.5-2.5" stroke="#0f1117" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Save to SharePoint
-    </button>
-  </div>
-
-  <div class="footer">saves to Client Onboarding folder &middot; xynergie msp ops</div>
-</div>
-</div><!-- /tabOnboarding -->
 
 <div class="tabpanel" id="tabReports">
 <div class="shell">
@@ -749,6 +771,23 @@ textarea.ob-notes:focus{outline:none;border-color:var(--accent)}
 
       <div class="card">
         <div class="card-hdr">
+          <span class="card-pill" style="background:var(--qdim);color:var(--amber)">NOTE</span>
+          <span class="card-title">Writing instructions</span>
+        </div>
+        <div class="ob-card-body">
+          <div class="rp-chips" id="rp-noteChips">
+            <button type="button">Make the report more positive</button>
+            <button type="button">Keep it shorter and more concise</button>
+            <button type="button">Use less technical language</button>
+            <button type="button">Highlight the value of our managed service</button>
+          </div>
+          <textarea class="ob-notes" id="rp-notes" style="min-height:80px" placeholder="Tell the writer how to adjust the report, e.g. &quot;make the report more positive&quot; or &quot;mention the new firewall we installed in May&quot;"></textarea>
+          <p class="rp-hint">Shapes tone, emphasis and wording of the summary, risks and recommendations. Numbers still come only from the vendor reports, and serious risks are never hidden.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hdr">
           <span class="card-pill" style="background:var(--pdim);color:var(--purple)">SIG</span>
           <span class="card-title">Signature block</span>
         </div>
@@ -784,6 +823,7 @@ textarea.ob-notes:focus{outline:none;border-color:var(--accent)}
           <button id="rp-vSimple" class="on">Client one-pager</button>
           <button id="rp-vFull">Full report</button>
         </div>
+        <button class="ob-btn" id="rp-rewriteBtn" title="Rewrite the summary, risks and recommendations using the current writing instructions. Vendor reports are not re-read.">Rewrite with instructions</button>
         <button class="ob-btn" id="rp-printBtn">Print / PDF</button>
         <button class="ob-btn primary" id="rp-saveBtn" disabled>Save to SharePoint</button>
       </div>
@@ -872,14 +912,14 @@ var CLIENT_ID   = '33792a35-4af8-4fbb-8c46-c2b19c702a62';
 var TENANT_ID   = 'd5a2e3df-bdc3-4c0f-8fd4-908cd7751d67';
 var SITE_URL    = 'https://xynergieholdings.sharepoint.com/sites/itops';
 var DAILY_FOLDER_PATH = 'Daily Logs';
-var ONBOARDING_FOLDER_PATH = 'Client Onboarding';
 var FD_DOMAIN   = 'xynergie.freshdesk.com';
 var FD_APIKEY   = 'wPeNTmLJDK2wW1JjR9Ns';
 
 (function () {
   var btns = document.querySelectorAll('.tabbtn');
-  var panels = { daily: 'tabDaily', onboarding: 'tabOnboarding', reports: 'tabReports' };
+  var panels = { tickets: 'tabTickets', daily: 'tabDaily', reports: 'tabReports' };
   function activate(tab) {
+    if (!panels[tab]) tab = 'tickets';
     btns.forEach(function (b) { b.classList.toggle('active', b.dataset.tab === tab); });
     Object.keys(panels).forEach(function (k) {
       var el = document.getElementById(panels[k]);
@@ -887,8 +927,13 @@ var FD_APIKEY   = 'wPeNTmLJDK2wW1JjR9Ns';
     });
   }
   btns.forEach(function (b) {
-    b.addEventListener('click', function () { activate(b.dataset.tab); });
+    b.addEventListener('click', function () {
+      activate(b.dataset.tab);
+      // #daily / #reports deep-link to a tab; a plain URL opens New Ticket
+      try { history.replaceState(null, '', b.dataset.tab === 'tickets' ? location.pathname + location.search : '#' + b.dataset.tab); } catch (e) {}
+    });
   });
+  activate(location.hash.slice(1));
 })();
 
 // ===== Shared MSAL auth (single sign-in, used by both tabs) =====
@@ -903,10 +948,6 @@ function applyUserToUI(name) {
   var dn = document.getElementById('user-name'); if (dn) dn.textContent = name;
   var da = document.getElementById('user-avatar'); if (da) da.textContent = initials;
   var ds = document.getElementById('saveBtn'); if (ds) ds.disabled = false;
-  // Onboarding tab
-  var on_ = document.getElementById('ob-user-name'); if (on_) on_.textContent = name;
-  var oa = document.getElementById('ob-user-avatar'); if (oa) oa.textContent = initials;
-  var os = document.getElementById('ob-saveBtn'); if (os) os.disabled = false;
 }
 function setUser(tokenResp) {
   accessToken = tokenResp.accessToken;
@@ -946,13 +987,10 @@ function initAuth() {
     }).catch(function(e) {
       var dn = document.getElementById('user-name'); if (dn) dn.textContent = 'Sign-in error';
       var da = document.getElementById('user-avatar'); if (da) da.textContent = '!';
-      var on_ = document.getElementById('ob-user-name'); if (on_) on_.textContent = 'Sign-in error';
-      var oa = document.getElementById('ob-user-avatar'); if (oa) oa.textContent = '!';
       console.error('MSAL error', e);
     });
   } catch(e) {
     var dn = document.getElementById('user-name'); if (dn) dn.textContent = 'Auth error';
-    var on_ = document.getElementById('ob-user-name'); if (on_) on_.textContent = 'Auth error';
     console.error('Auth init failed', e);
   }
 }
@@ -1091,7 +1129,7 @@ DATA.forEach(function(sec,si){
     svg.setAttribute('class','ck'); svg.setAttribute('width','9'); svg.setAttribute('height','9');
     svg.setAttribute('viewBox','0 0 10 10'); svg.setAttribute('fill','none');
     var path=document.createElementNS('http://www.w3.org/2000/svg','path');
-    path.setAttribute('d','M1.5 5L4 7.5L8.5 2.5'); path.setAttribute('stroke','#3ecf8e');
+    path.setAttribute('d','M1.5 5L4 7.5L8.5 2.5'); path.setAttribute('stroke','#107c10');
     path.setAttribute('stroke-width','2'); path.setAttribute('stroke-linecap','round'); path.setAttribute('stroke-linejoin','round');
     svg.appendChild(path); cb.appendChild(svg);
     var tt=document.createElement('span'); tt.className='tt'+(state[id]?' on':''); tt.id='tt'+id; tt.textContent=task;
@@ -1397,261 +1435,6 @@ document.addEventListener('click', function(e) {
 });
 
 // ============================================================
-// ===== ONBOARDING TAB =====
-// ============================================================
-
-var PRODUCTS = [
-  { id: "edr", name: "EDR / AV" },
-  { id: "itdr", name: "ITDR" },
-  { id: "inky", name: "INKY" },
-  { id: "saasbackup", name: "SaaS Backup" },
-  { id: "bcdr", name: "BCDR" },
-  { id: "dattormm", name: "Datto RMM" },
-  { id: "m365", name: "M365" },
-  { id: "bullphish", name: "Bullphish" },
-  { id: "huntresssat", name: "Huntress SAT" },
-  { id: "firewall", name: "Firewall" }
-];
-
-var SERVICE_TYPES = [
-  { id: "remote", name: "Remote Service" },
-  { id: "onsite", name: "Onsite Service" },
-  { id: "both", name: "Both" },
-  { id: "none", name: "No Services" }
-];
-
-var ALL_PRODUCT_IDS = PRODUCTS.map(function(p){ return p.id; });
-var ALL_OB_FIELD_IDS = ["ob-clientName","ob-primaryContact","ob-contactEmail","ob-contactPhone","ob-contractDate","ob-onboardOwner","ob-visitFrequency","ob-monthlyVisit","ob-notes","ob-sigInternal","ob-sigDate"];
-
-var obState = {};
-var svcState = {};
-
-document.getElementById('ob-dl').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-
-var productGrid = document.getElementById('ob-productGrid');
-PRODUCTS.forEach(function(p){
-  obState[p.id] = false;
-  var div = document.createElement('div');
-  div.className = 'ob-product-item';
-  div.id = 'ob-wrap_' + p.id;
-  div.innerHTML =
-    '<div class="cb"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="#3ecf8e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'
-    + '<span class="pname">' + p.name + '</span>';
-  div.addEventListener('click', function(){
-    obState[p.id] = !obState[p.id];
-    div.classList.toggle('checked', obState[p.id]);
-    updateProductBadge();
-    updateObProgress();
-  });
-  productGrid.appendChild(div);
-});
-
-function updateProductBadge(){
-  var done = ALL_PRODUCT_IDS.filter(function(id){ return obState[id]; }).length;
-  var badge = document.getElementById('ob-prodBadge');
-  badge.textContent = done + ' / ' + ALL_PRODUCT_IDS.length;
-  badge.className = 'card-badge' + (done === ALL_PRODUCT_IDS.length ? ' done' : '');
-}
-
-var serviceRow = document.getElementById('ob-serviceTypeRow');
-SERVICE_TYPES.forEach(function(s){
-  svcState[s.id] = false;
-  var div = document.createElement('div');
-  div.className = 'ob-pill-check';
-  div.id = 'ob-wrap_svc_' + s.id;
-  div.innerHTML = '<span>' + s.name + '</span>';
-  div.addEventListener('click', function(){ svcToggle(s.id); });
-  serviceRow.appendChild(div);
-});
-
-function svcToggle(id){
-  if (id === 'none') {
-    svcState.none = !svcState.none;
-    if (svcState.none) { svcState.remote = false; svcState.onsite = false; svcState.both = false; }
-  } else if (id === 'both') {
-    svcState.both = !svcState.both;
-    if (svcState.both) { svcState.remote = true; svcState.onsite = true; svcState.none = false; }
-    else { svcState.remote = false; svcState.onsite = false; }
-  } else {
-    svcState[id] = !svcState[id];
-    if (svcState[id]) svcState.none = false;
-    svcState.both = svcState.remote && svcState.onsite;
-  }
-  SERVICE_TYPES.forEach(function(s){
-    document.getElementById('ob-wrap_svc_' + s.id).classList.toggle('checked', !!svcState[s.id]);
-  });
-  updateObProgress();
-}
-
-function updateObProgress(){
-  var totalChecks = ALL_PRODUCT_IDS.length + 1;
-  var done = ALL_PRODUCT_IDS.filter(function(id){ return obState[id]; }).length;
-  var svcAny = SERVICE_TYPES.some(function(s){ return svcState[s.id]; });
-  if (svcAny) done += 1;
-  var coreFilled = document.getElementById('ob-clientName').value.trim() && document.getElementById('ob-contractDate').value;
-  if (coreFilled) { totalChecks += 1; done += 1; }
-  var pct = totalChecks > 0 ? Math.round(done / totalChecks * 100) : 0;
-  document.getElementById('ob-pf').style.width = pct + '%';
-  document.getElementById('ob-pc').textContent = pct + '% complete';
-}
-
-ALL_OB_FIELD_IDS.forEach(function(id){
-  document.getElementById(id).addEventListener('input', updateObProgress);
-});
-
-updateProductBadge();
-updateObProgress();
-
-document.getElementById('ob-resetBtn').addEventListener('click', function(){
-  if (!confirm('Clear all fields on this onboarding form? This cannot be undone.')) return;
-  ALL_PRODUCT_IDS.forEach(function(id){
-    obState[id] = false;
-    document.getElementById('ob-wrap_' + id).classList.remove('checked');
-  });
-  SERVICE_TYPES.forEach(function(s){
-    svcState[s.id] = false;
-    document.getElementById('ob-wrap_svc_' + s.id).classList.remove('checked');
-  });
-  ALL_OB_FIELD_IDS.forEach(function(id){ document.getElementById(id).value = ''; });
-  updateProductBadge();
-  updateObProgress();
-  setObStatus('', '');
-});
-
-function buildOnboardingHTML() {
-  var clientName = document.getElementById('ob-clientName').value.trim() || 'Unnamed Client';
-  var primaryContact = document.getElementById('ob-primaryContact').value.trim();
-  var contactEmail = document.getElementById('ob-contactEmail').value.trim();
-  var contactPhone = document.getElementById('ob-contactPhone').value.trim();
-  var contractDate = document.getElementById('ob-contractDate').value;
-  var onboardOwner = document.getElementById('ob-onboardOwner').value.trim();
-  var visitFrequency = document.getElementById('ob-visitFrequency').value;
-  var monthlyVisit = document.getElementById('ob-monthlyVisit').value.trim();
-  var notes = document.getElementById('ob-notes').value.trim();
-  var sigInternal = document.getElementById('ob-sigInternal').value.trim();
-  var sigDate = document.getElementById('ob-sigDate').value;
-
-  var now = new Date();
-  var savedStr = now.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}) + ' at ' + now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
-
-  var productRows = '';
-  PRODUCTS.forEach(function(p){
-    var checked = !!obState[p.id];
-    productRows += '<tr style="border-bottom:1px solid #e5e7eb">'
-      + '<td style="padding:8px 12px;width:24px;text-align:center;color:' + (checked ? '#16a34a' : '#9ca3af') + ';font-size:16px">' + (checked ? '&#10003;' : '&#9675;') + '</td>'
-      + '<td style="padding:8px 12px;font-size:13px;color:#111827">' + p.name + '</td>'
-      + '</tr>';
-  });
-
-  var svcSummary = SERVICE_TYPES.filter(function(s){ return svcState[s.id]; }).map(function(s){ return s.name; }).join(', ') || 'Not specified';
-
-  function esc(s){ return (s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-  return '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Onboarding - ' + esc(clientName) + '</title></head>'
-    + '<body style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;max-width:860px;margin:40px auto;padding:0 24px;color:#111827">'
-    + '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;padding-bottom:16px;border-bottom:2px solid #111827">'
-    + '<div><div style="font-family:monospace;font-size:11px;color:#6b7280;text-transform:uppercase;margin-bottom:4px">Xynergie Corp</div>'
-    + '<div style="font-size:22px;font-weight:700">Client Onboarding Record</div>'
-    + '<div style="font-size:13px;color:#6b7280;margin-top:4px">' + esc(clientName) + '</div></div>'
-    + '<div style="text-align:right"><div style="font-size:13px;color:#6b7280">Saved by</div>'
-    + '<div style="font-size:14px;font-weight:600">' + esc(currentUser || 'Unknown') + '</div>'
-    + '<div style="font-size:12px;color:#6b7280;margin-top:2px">' + savedStr + '</div></div></div>'
-
-    + '<h3 style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#374151;margin:0 0 10px">Client &amp; Contract Information</h3>'
-    + '<table style="width:100%;border-collapse:collapse;border:1px solid #e5e7eb;margin-bottom:24px">'
-    + '<tr style="border-bottom:1px solid #e5e7eb"><td style="padding:8px 12px;font-size:12px;color:#6b7280;width:200px">Primary Contact</td><td style="padding:8px 12px;font-size:13px">' + esc(primaryContact || '—') + '</td></tr>'
-    + '<tr style="border-bottom:1px solid #e5e7eb"><td style="padding:8px 12px;font-size:12px;color:#6b7280">Contact Email</td><td style="padding:8px 12px;font-size:13px">' + esc(contactEmail || '—') + '</td></tr>'
-    + '<tr style="border-bottom:1px solid #e5e7eb"><td style="padding:8px 12px;font-size:12px;color:#6b7280">Contact Phone</td><td style="padding:8px 12px;font-size:13px">' + esc(contactPhone || '—') + '</td></tr>'
-    + '<tr style="border-bottom:1px solid #e5e7eb"><td style="padding:8px 12px;font-size:12px;color:#6b7280">Contract Closed Date</td><td style="padding:8px 12px;font-size:13px">' + esc(contractDate || '—') + '</td></tr>'
-    + '<tr><td style="padding:8px 12px;font-size:12px;color:#6b7280">Onboarding Owner</td><td style="padding:8px 12px;font-size:13px">' + esc(onboardOwner || '—') + '</td></tr>'
-    + '</table>'
-
-    + '<h3 style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#374151;margin:0 0 10px">Products &amp; Programs</h3>'
-    + '<table style="width:100%;border-collapse:collapse;border:1px solid #e5e7eb;margin-bottom:24px">' + productRows + '</table>'
-
-    + '<h3 style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#374151;margin:0 0 10px">Service Type &amp; Visit Cadence</h3>'
-    + '<table style="width:100%;border-collapse:collapse;border:1px solid #e5e7eb;margin-bottom:24px">'
-    + '<tr style="border-bottom:1px solid #e5e7eb"><td style="padding:8px 12px;font-size:12px;color:#6b7280;width:200px">Service Type</td><td style="padding:8px 12px;font-size:13px">' + esc(svcSummary) + '</td></tr>'
-    + '<tr style="border-bottom:1px solid #e5e7eb"><td style="padding:8px 12px;font-size:12px;color:#6b7280">Visit Frequency</td><td style="padding:8px 12px;font-size:13px">' + esc(visitFrequency || '—') + '</td></tr>'
-    + '<tr><td style="padding:8px 12px;font-size:12px;color:#6b7280">Monthly Visit Day / Notes</td><td style="padding:8px 12px;font-size:13px">' + esc(monthlyVisit || '—') + '</td></tr>'
-    + '</table>'
-
-    + '<h3 style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#374151;margin:0 0 10px">Onboarding Notes</h3>'
-    + '<p style="font-size:13px;color:#111827;white-space:pre-wrap;margin-bottom:24px">' + (esc(notes) || '<span style="color:#9ca3af;font-style:italic">No notes entered.</span>') + '</p>'
-
-    + '<h3 style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#374151;margin:0 0 10px">Sign-Off</h3>'
-    + '<table style="width:100%;border-collapse:collapse;border:1px solid #e5e7eb">'
-    + '<tr style="border-bottom:1px solid #e5e7eb"><td style="padding:8px 12px;font-size:12px;color:#6b7280;width:200px">Xynergie Representative</td><td style="padding:8px 12px;font-size:13px">' + esc(sigInternal || '—') + '</td></tr>'
-    + '<tr><td style="padding:8px 12px;font-size:12px;color:#6b7280">Date Completed</td><td style="padding:8px 12px;font-size:13px">' + esc(sigDate || '—') + '</td></tr>'
-    + '</table>'
-
-    + '</body></html>';
-}
-
-document.getElementById('ob-saveBtn').addEventListener('click', function() {
-  if (!accessToken) { setObStatus('Not signed in to M365.', 'err'); return; }
-  var clientName = document.getElementById('ob-clientName').value.trim();
-  if (!clientName) { setObStatus('Client name is required before saving.', 'err'); return; }
-  refreshTokenSilently(doObSave);
-});
-
-function doObSave() {
-  if (!accessToken) { setObStatus('Not signed in to M365.', 'err'); return; }
-  var btn = document.getElementById('ob-saveBtn');
-  btn.disabled = true;
-  setObStatus('Saving to SharePoint...', 'ing');
-
-  var clientName = document.getElementById('ob-clientName').value.trim() || 'unknown-client';
-  var contractDate = document.getElementById('ob-contractDate').value || new Date().toISOString().slice(0,10);
-  var safeName = clientName.replace(/[^a-zA-Z0-9]/g,'-');
-  var fileName = contractDate + '-' + safeName + '.html';
-  var content = buildOnboardingHTML();
-
-  var siteHostname = SITE_URL.replace('https://','').split('/')[0];
-  var sitePath = SITE_URL.replace('https://'+siteHostname,'');
-
-  fetch('https://graph.microsoft.com/v1.0/sites/'+siteHostname+':'+sitePath, {
-    headers:{'Authorization':'Bearer '+accessToken}
-  })
-  .then(function(r){return r.json();})
-  .then(function(site){
-    if (!site.id) throw new Error('SharePoint site not found.');
-    return fetch(
-      'https://graph.microsoft.com/v1.0/sites/'+site.id+'/drive/root:/'+encodeURIComponent(ONBOARDING_FOLDER_PATH)+'/'+encodeURIComponent(fileName)+':/content',
-      {method:'PUT', headers:{'Authorization':'Bearer '+accessToken,'Content-Type':'text/html'}, body:content}
-    );
-  })
-  .then(function(r){return r.json();})
-  .then(function(file){
-    if (file.id) { setObStatus('Saved: '+fileName, 'ok'); }
-    else {
-      var msg = file.error ? (file.error.code + ': ' + file.error.message) : 'Upload failed';
-      console.error('SharePoint upload error:', JSON.stringify(file));
-      throw new Error(msg);
-    }
-  })
-  .catch(function(err){
-    console.error('Save error:', err);
-    setObStatus('Error: '+err.message, 'err');
-  })
-  .finally(function(){ btn.disabled = false; });
-}
-
-function setObStatus(msg,type){
-  var el=document.getElementById('ob-save-status');
-  el.textContent=msg;el.className='save-status '+type;
-  if (type === 'ok') obFormSaved = true;
-}
-
-var obFormSaved = false;
-document.addEventListener('input', function(e){
-  if (e.target.closest && e.target.closest('#tabOnboarding')) obFormSaved = false;
-});
-document.addEventListener('click', function(e){
-  if (e.target.closest && (e.target.closest('.ob-product-item') || e.target.closest('.ob-pill-check'))) obFormSaved = false;
-});
-
-// ============================================================
 // ===== CLIENT REPORTS TAB =====
 // ============================================================
 (function () {
@@ -1672,7 +1455,14 @@ document.addEventListener('click', function(e){
     { id: 'inky',     name: 'INKY',                  tag: 'Email Security',      hint: 'Mail scanned, phish/malware blocked, spoofed brands.' },
     { id: 'dnsf',     name: 'DNSFilter',             tag: 'DNS',                 hint: 'Queries, blocked categories, top blocked domains.' },
     { id: 'dwid',     name: 'Dark Web ID',           tag: 'Credential Exposure', hint: 'New exposures, affected users, source breaches.' },
-    { id: 'm365',     name: 'Microsoft 365 / Entra', tag: 'Identity',            hint: 'Secure Score, risky sign-ins, MFA + CA coverage.' }
+    { id: 'm365',     name: 'Microsoft 365 / Entra', tag: 'Identity',            hint: 'Secure Score, risky sign-ins, MFA + CA coverage.' },
+    // Non-security sources: role/focus replace the security-analyst framing in readSource.
+    { id: 'freshdesk', name: 'Freshdesk',            tag: 'Tickets',             hint: 'Ticket export or helpdesk report: volume, SLA, resolution times.',
+      role: 'a service desk manager at an MSP',
+      focus: 'This is a helpdesk ticket report, not a security tool. Useful metrics: tickets opened, tickets resolved, tickets still open, average first response time, average resolution time, SLA compliance %, and the top ticket categories or recurring issues. Findings are only for service problems the data shows (SLA breaches, tickets aging past 30 days, the same issue recurring for one user or device); routine ticket volume is not a finding. Do not fill scope_devices or scope_identities from ticket counts.' },
+    { id: 'mindsalt', name: 'Mindsalt',              tag: 'Billing',             hint: 'Billing report: billed seats, devices, services and totals.',
+      role: 'a billing analyst at an MSP',
+      focus: 'This is a billing report, not a security tool. Useful metrics: billed users or seats, billed devices, number of billed services or line items, and the period total exactly as stated. Findings are only for billing issues the data shows (quantity changes from the prior period, services billed with zero quantity, unusual charges). Label billed counts exactly "billed devices" and "billed users" so they can be compared with the counts the security tools report; a gap between billed and protected counts is a reconcile item, not a security finding. Leave scope_devices and scope_identities at 0.' }
   ];
 
   var TYPE_BRIEF = {
@@ -1734,14 +1524,14 @@ document.addEventListener('click', function(e){
         '<button type="button"><i class="led"></i>' + s.name + '<span class="tag">' + s.tag + '</span></button>' +
         '<div class="body">' +
         '<p class="rp-slot">This period</p>' +
-        '<div class="rp-drop" id="rp-dz-' + s.id + '">Drop a PDF or screenshot, or click to choose</div>' +
-        '<input type="file" id="rp-fi-' + s.id + '" accept=".pdf,image/*" multiple hidden>' +
+        '<div class="rp-drop" id="rp-dz-' + s.id + '">Drop a PDF, CSV or screenshot, or click to choose</div>' +
+        '<input type="file" id="rp-fi-' + s.id + '" accept=".pdf,.csv,image/*" multiple hidden>' +
         '<div class="rp-files" id="rp-fl-' + s.id + '"></div>' +
         '<textarea class="card-notes-ta" id="rp-ta-' + s.id + '" placeholder="…or paste raw text" style="width:100%;height:56px"></textarea>' +
         '<div class="rp-hr"></div>' +
         '<p class="rp-slot prior">Prior period (optional, enables comparison)</p>' +
         '<div class="rp-drop prior" id="rp-pz-' + s.id + '">Drop last month\'s report</div>' +
-        '<input type="file" id="rp-pi-' + s.id + '" accept=".pdf,image/*" multiple hidden>' +
+        '<input type="file" id="rp-pi-' + s.id + '" accept=".pdf,.csv,image/*" multiple hidden>' +
         '<div class="rp-files" id="rp-pl-' + s.id + '"></div>' +
         '</div>';
       d.querySelector('button').addEventListener('click', function () { d.classList.toggle('open'); });
@@ -1810,7 +1600,10 @@ document.addEventListener('click', function(e){
       chain = chain.then(function () {
         if (f.size > MAX_MB * 1024 * 1024) { log(f.name + ' is over ' + MAX_MB + ' MB — skipped', 'u'); return; }
         var isPdf = f.type === 'application/pdf' || /\.pdf$/i.test(f.name);
-        if (!isPdf && f.type.indexOf('image/') !== 0) { log(f.name + ' is not a PDF or image — skipped', 'u'); return; }
+        if (/\.csv$/i.test(f.name) || f.type === 'text/csv') {
+          return f.text().then(function (t) { store[id].push({ name: f.name, size: f.size, text: t.slice(0, 60000), csv: true }); });
+        }
+        if (!isPdf && f.type.indexOf('image/') !== 0) { log(f.name + ' is not a PDF, CSV or image — skipped', 'u'); return; }
         var p = isPdf ? Promise.resolve(null) : shrink(f);
         return p.then(function (sm) {
           if (sm) { store[id].push({ name: f.name, size: f.size, media: sm.media, data: sm.data, pdf: false }); return; }
@@ -1847,6 +1640,7 @@ document.addEventListener('click', function(e){
       to: document.getElementById('rp-to').value,
       type: document.getElementById('rp-type').value,
       cls: document.getElementById('rp-cls').value,
+      notes: document.getElementById('rp-notes').value.trim(),
       sig: {
         name: document.getElementById('rp-signame').value.trim(),
         title: document.getElementById('rp-sigtitle').value.trim(),
@@ -1935,6 +1729,7 @@ document.addEventListener('click', function(e){
   // ---------- extraction ----------
   function blocks(store, id) {
     return (store[id] || []).map(function (f) {
+      if (f.csv) return { type: 'text', text: 'CSV FILE ' + f.name + ':\n' + f.text };
       return f.pdf
         ? { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: f.data } }
         : { type: 'image', source: { type: 'base64', media_type: f.media, data: f.data } };
@@ -1945,7 +1740,7 @@ document.addEventListener('click', function(e){
     var content = blocks(isPrior ? prior : files, src.id);
     var pasted = isPrior ? '' : txt(src.id);
     var prompt =
-'You are a security analyst at an MSSP reading a report from ' + src.name + ' (' + src.tag + ') for the client "' + m.client + '"' +
+'You are ' + (src.role || 'a security analyst at an MSSP') + ' reading a report from ' + src.name + ' (' + src.tag + ') for the client "' + m.client + '"' +
 (isPrior ? ', covering the PRIOR period (the month before the current report)' : ', period ' + (m.from || '?') + ' to ' + (m.to || '?')) + '.\n\n' +
 'RULES:\n' +
 '1. Extract only what the report states about THIS client. Never estimate or invent a number.\n' +
@@ -1954,7 +1749,8 @@ document.addEventListener('click', function(e){
 '4. Reconcile the numbers. If a stated total disagrees with its own component breakdown, or two figures imply different population sizes, record it in "reconcile". If everything ties out, return an empty array.\n' +
 '5. Write in plain sentences. Never use em dashes or en dashes; use a comma, a colon, a semicolon or a full stop instead.\n' +
 '6. If the report states how many devices, endpoints, servers or workstations are protected, put that number in "scope_devices" as a plain integer. If it states how many users, identities, mailboxes or seats are covered, put that in "scope_identities". Omit either if the report does not state it. Never estimate.\n' +
-'7. Metric labels must be plain and stable, e.g. "events analyzed", "signals detected", "incidents reported", "entities protected". Use the same wording you would use for any month, so periods can be compared.\n\n' +
+'7. Metric labels must be plain and stable, e.g. "events analyzed", "signals detected", "incidents reported", "entities protected". Use the same wording you would use for any month, so periods can be compared.\n' +
+(src.focus ? '8. ' + src.focus + '\n' : '') + '\n' +
 'Return ONLY a JSON object, no fences:\n' +
 '{"status":"one short clause","metrics":[{"value":"2.09M","label":"events analyzed"}],\n' +
 ' "findings":[{"severity":"critical|high|medium|low|info","title":"under 8 words","detail":"under 25 words"}],\n' +
@@ -2007,7 +1803,12 @@ JSON.stringify(slim) + '\n\n' +
 '2. A quiet month is a real outcome. Say the controls worked; do not imply danger the data does not show.\n' +
 '3. Where movement data exists, lead with the change rather than the raw count.\n' +
 '4. Where more than one source is present, say something the sources only reveal together rather than restating each tool in turn.\n' +
-'5. Write in plain sentences. Never use em dashes or en dashes; use a comma, a colon, a semicolon or a full stop instead.';
+'5. Write in plain sentences. Never use em dashes or en dashes; use a comma, a colon, a semicolon or a full stop instead.' +
+(m.notes
+  ? '\n\nINSTRUCTIONS FROM THE XYNERGIE ANALYST (follow these for tone, emphasis, length and wording; ' +
+    'they may add context the analyst states as fact, but they never override rule 1, and a critical or high risk must still be reported):\n' +
+    m.notes.slice(0, 2000)
+  : '');
 
     log('  writing narrative…');
     return callModel([{ type: 'text', text:
@@ -2179,6 +1980,8 @@ JSON.stringify(slim) + '\n\n' +
 
   function readScope(entry, kind) {
     if (!entry) return null;
+    // Billed or ticket counts are not protected scope (billing gaps go to reconcile instead).
+    if (SOURCES.some(function (s) { return s.name === entry.name && s.role; })) return null;
     var field = kind === 'devices' ? entry.data.scope_devices : entry.data.scope_identities;
     var v = parseInt(field, 10);
     if (!isNaN(v) && v > 0) return v;
@@ -2421,6 +2224,34 @@ JSON.stringify(slim) + '\n\n' +
     .then(function () { btn.disabled = false; btn.textContent = 'Build report'; });
   });
 
+  // Quick-add instruction chips
+  [].forEach.call(document.querySelectorAll('#rp-noteChips button'), function (b) {
+    b.addEventListener('click', function () {
+      var ta = document.getElementById('rp-notes');
+      if (ta.value.indexOf(b.textContent) !== -1) return;
+      ta.value = (ta.value.trim() ? ta.value.trim() + '\n' : '') + b.textContent + '.';
+      ta.focus();
+    });
+  });
+
+  // Re-run only the writing passes on the already-extracted data
+  document.getElementById('rp-rewriteBtn').addEventListener('click', function () {
+    if (!lastReport) return;
+    var btn = this, m = meta();
+    if (typeof refreshTokenSilently === 'function') refreshTokenSilently(function () {});
+    btn.disabled = true; btn.textContent = 'Rewriting…';
+    elLog.innerHTML = '';
+    log('Rewriting with ' + (m.notes ? 'your instructions' : 'no instructions') + '…');
+    synthesize(lastReport.bundle, m)
+      .then(function (syn) {
+        lastReport = { syn: syn, bundle: lastReport.bundle, m: m };
+        draw();
+        log('Report rewritten.', 'b');
+      })
+      .catch(function (err) { log('Rewrite failed: ' + err.message + '. The previous version is still shown.', 'u'); })
+      .then(function () { btn.disabled = false; btn.textContent = 'Rewrite with instructions'; });
+  });
+
   document.getElementById('rp-vSimple').addEventListener('click', function () { VIEW = 'simple'; draw(); });
   document.getElementById('rp-vFull').addEventListener('click', function () { VIEW = 'full'; draw(); });
   document.getElementById('rp-printBtn').addEventListener('click', function () { window.print(); });
@@ -2514,17 +2345,212 @@ JSON.stringify(slim) + '\n\n' +
 })();
 
 
+// ============================================================
+// ===== NEW TICKET TAB =====
+// ============================================================
+(function () {
+  'use strict';
+
+  var MAX_ATTACH_MB = 20;
+  var FD_BASE = 'https://' + FD_DOMAIN + '/api/v2';
+  var FD_AUTH = 'Basic ' + btoa(FD_APIKEY + ':X');
+  var LS_RECENT = 'tn-recent-emails', LS_LOG = 'tn-log';
+  var attachments = [];
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+  function list(v) { return v.split(',').map(function (x) { return x.trim(); }).filter(Boolean); }
+  function lsGet(k, d) { try { var v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  function today() { return new Date().toISOString().slice(0, 10); }
+  function setStatus(html, type) { var el = $('tn-msg'); el.innerHTML = html; el.className = 'ticket-status ' + type; }
+  function fdGet(path) {
+    return fetch(FD_BASE + path, { headers: { 'Authorization': FD_AUTH } })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
+  }
+
+  $('tn-dl').textContent =
+    new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+  onAuthReady(function () {
+    var name = currentUser || 'User';
+    $('tn-user-name').textContent = name;
+    $('tn-user-avatar').textContent = name.split(' ').map(function (w) { return w[0]; }).join('').slice(0, 2).toUpperCase();
+  });
+
+  // ---------- dropdowns from Freshdesk (left at defaults if the key lacks access) ----------
+  function fill(sel, items) {
+    items.forEach(function (it) {
+      var o = document.createElement('option'); o.value = it.v; o.textContent = it.t; sel.appendChild(o);
+    });
+  }
+  fdGet('/ticket_fields').then(function (fields) {
+    var f = fields.filter(function (x) { return x.name === 'ticket_type'; })[0];
+    if (f && f.choices) fill($('tn-type'), f.choices.map(function (c) { return { v: c, t: c }; }));
+  }).catch(function () {});
+  fdGet('/groups?per_page=100').then(function (gs) {
+    fill($('tn-group'), gs.map(function (g) { return { v: g.id, t: g.name }; }));
+  }).catch(function () {});
+  fdGet('/agents?per_page=100').then(function (as) {
+    fill($('tn-agent'), as.map(function (a) { return { v: a.id, t: (a.contact && (a.contact.name || a.contact.email)) || ('Agent ' + a.id) }; })
+      .sort(function (a, b) { return a.t.localeCompare(b.t); }));
+  }).catch(function () {});
+
+  // ---------- recent requesters ----------
+  function drawRecentEmails() {
+    $('tn-recent-emails').innerHTML = lsGet(LS_RECENT, []).map(function (e) { return '<option value="' + esc(e) + '">'; }).join('');
+  }
+  function rememberEmail(e) {
+    var r = lsGet(LS_RECENT, []).filter(function (x) { return x.toLowerCase() !== e.toLowerCase(); });
+    r.unshift(e); lsSet(LS_RECENT, r.slice(0, 25)); drawRecentEmails();
+  }
+  drawRecentEmails();
+
+  // ---------- attachments ----------
+  function totalBytes() { return attachments.reduce(function (n, f) { return n + f.size; }, 0); }
+  function addAttachments(files) {
+    files.forEach(function (f) {
+      if (totalBytes() + f.size > MAX_ATTACH_MB * 1048576) { setStatus(esc(f.name) + ' skipped: attachments are limited to ' + MAX_ATTACH_MB + ' MB total.', 'err'); return; }
+      attachments.push(f);
+    });
+    drawAttachments();
+  }
+  function drawAttachments() {
+    var el = $('tn-files');
+    el.innerHTML = attachments.map(function (f, i) {
+      return '<div class="rp-chip"><span>' + esc(f.name) + '</span><em>' + Math.max(1, Math.round(f.size / 1024)) + 'k</em><button data-i="' + i + '">&times;</button></div>';
+    }).join('');
+    [].forEach.call(el.querySelectorAll('button'), function (b) {
+      b.addEventListener('click', function () { attachments.splice(parseInt(b.dataset.i, 10), 1); drawAttachments(); });
+    });
+  }
+  var dz = $('tn-drop'), fi = $('tn-file');
+  dz.addEventListener('click', function () { fi.click(); });
+  fi.addEventListener('change', function (e) { addAttachments([].slice.call(e.target.files)); fi.value = ''; });
+  ['dragenter', 'dragover'].forEach(function (ev) { dz.addEventListener(ev, function (e) { e.preventDefault(); dz.classList.add('over'); }); });
+  ['dragleave', 'drop'].forEach(function (ev) { dz.addEventListener(ev, function (e) { e.preventDefault(); dz.classList.remove('over'); }); });
+  dz.addEventListener('drop', function (e) { addAttachments([].slice.call(e.dataTransfer.files)); });
+
+  // ---------- created-today log ----------
+  function drawLog() {
+    var log = lsGet(LS_LOG, {});
+    var rows = log.date === today() ? log.items : [];
+    $('tn-count').textContent = rows.length;
+    $('tn-recent').innerHTML = rows.length
+      ? rows.map(function (t) {
+          return '<div class="tn-row"><time>' + esc(t.time) + '</time><a class="ticket-link" href="https://' + FD_DOMAIN + '/helpdesk/tickets/' + t.id +
+                 '" target="_blank">#' + t.id + '</a><span title="' + esc(t.subject) + '">' + esc(t.subject) + '</span></div>';
+        }).join('')
+      : '<div class="card-notes-empty">No tickets created yet today</div>';
+  }
+  function logTicket(id, subject) {
+    var log = lsGet(LS_LOG, {});
+    if (log.date !== today()) log = { date: today(), items: [] };
+    log.items.unshift({ id: id, subject: subject, time: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) });
+    lsSet(LS_LOG, log); drawLog();
+    // mirror into the Daily Checklist ticket notes, same as its inline form
+    if (typeof cardNotes !== 'undefined') {
+      if (!cardNotes['tkt']) cardNotes['tkt'] = [];
+      cardNotes['tkt'].push({ text: 'Ticket #' + id + ' created — ' + subject, ts: Date.now() });
+      saveCardNotes(cardNotes); renderCardNotes('tkt'); updateNotesBtnCount('tkt');
+    }
+  }
+  drawLog();
+
+  // ---------- form ----------
+  var FIELDS = ['tn-email', 'tn-name', 'tn-phone', 'tn-cc', 'tn-subject', 'tn-desc', 'tn-tags'];
+  function clearForm() {
+    FIELDS.forEach(function (id) { $(id).value = ''; $(id).classList.remove('tn-bad'); });
+    $('tn-priority').value = '2'; $('tn-status').value = '2'; $('tn-source').value = '7';
+    $('tn-type').value = ''; $('tn-group').value = ''; $('tn-agent').value = '';
+    attachments = []; drawAttachments();
+  }
+  window.tnFormDirty = function () { return !!($('tn-subject').value.trim() || $('tn-desc').value.trim()); };
+
+  $('tn-clearBtn').addEventListener('click', function () {
+    if (window.tnFormDirty() && !confirm('Clear this ticket?')) return;
+    clearForm(); setStatus('', '');
+  });
+  FIELDS.forEach(function (id) { $(id).addEventListener('input', function () { $(id).classList.remove('tn-bad'); }); });
+
+  $('tn-submit').addEventListener('click', function () {
+    var btn = $('tn-submit');
+    if (btn.disabled) return;
+    var email = $('tn-email').value.trim(), subject = $('tn-subject').value.trim(), desc = $('tn-desc').value.trim();
+    var missing = [];
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) missing.push('tn-email');
+    if (!subject) missing.push('tn-subject');
+    if (!desc) missing.push('tn-desc');
+    var badCc = list($('tn-cc').value).filter(function (e) { return !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); });
+    if (badCc.length) missing.push('tn-cc');
+    if (missing.length) {
+      missing.forEach(function (id) { $(id).classList.add('tn-bad'); });
+      setStatus(badCc.length ? 'Check the CC emails: ' + esc(badCc.join(', ')) : 'Fill in the highlighted fields.', 'err');
+      return;
+    }
+
+    var t = {
+      email: email, subject: subject,
+      description: esc(desc).replace(/\n/g, '<br>'),
+      priority: +$('tn-priority').value, status: +$('tn-status').value, source: +$('tn-source').value
+    };
+    var name = $('tn-name').value.trim(), phone = $('tn-phone').value.trim();
+    if (name) t.name = name;
+    if (phone) t.phone = phone;
+    if ($('tn-type').value) t.type = $('tn-type').value;
+    if ($('tn-group').value) t.group_id = +$('tn-group').value;
+    if ($('tn-agent').value) t.responder_id = +$('tn-agent').value;
+    var tags = list($('tn-tags').value), cc = list($('tn-cc').value);
+    if (tags.length) t.tags = tags;
+    if (cc.length) t.cc_emails = cc;
+
+    // Attachments need multipart; everything else goes as JSON
+    var req = { method: 'POST', headers: { 'Authorization': FD_AUTH } };
+    if (attachments.length) {
+      var fd = new FormData();
+      Object.keys(t).forEach(function (k) {
+        if (Array.isArray(t[k])) t[k].forEach(function (v) { fd.append(k + '[]', v); });
+        else fd.append(k, t[k]);
+      });
+      attachments.forEach(function (f) { fd.append('attachments[]', f, f.name); });
+      req.body = fd;
+    } else {
+      req.headers['Content-Type'] = 'application/json';
+      req.body = JSON.stringify(t);
+    }
+
+    btn.disabled = true; setStatus('Creating ticket...', 'ing');
+    fetch(FD_BASE + '/tickets', req)
+      .then(function (r) {
+        if (r.status === 201) return r.json();
+        return r.json().catch(function () { return {}; }).then(function (e) {
+          var detail = (e.errors || []).map(function (x) { return (x.field ? x.field + ': ' : '') + x.message; }).join('; ');
+          throw new Error(detail || e.description || ('Status ' + r.status));
+        });
+      })
+      .then(function (ticket) {
+        setStatus('Ticket <a class="ticket-link" href="https://' + FD_DOMAIN + '/helpdesk/tickets/' + ticket.id + '" target="_blank">#' + ticket.id + '</a> created.', 'ok');
+        rememberEmail(email);
+        logTicket(ticket.id, subject);
+        clearForm();
+      })
+      .catch(function (err) { setStatus('Error: ' + esc(err.message), 'err'); })
+      .then(function () { btn.disabled = false; });
+  });
+})();
+
 // ===== Combined unload warning =====
 window.addEventListener('beforeunload', function(e) {
   var dailyDone = 0, keys = Object.keys(state);
   for (var i = 0; i < keys.length; i++) { if (state[keys[i]]) dailyDone++; }
   var dailyUnsaved = dailyDone > 0 && !logSaved;
+  var ticketUnsent = window.tnFormDirty && window.tnFormDirty();
 
-  var obAnyChecked = ALL_PRODUCT_IDS.some(function(id){ return obState[id]; });
-  var obAnyFilled = document.getElementById('ob-clientName').value.trim().length > 0;
-  var obUnsaved = (obAnyChecked || obAnyFilled) && !obFormSaved;
-
-  if (dailyUnsaved || obUnsaved) {
+  if (dailyUnsaved || ticketUnsent) {
     e.preventDefault();
     e.returnValue = 'You have unsaved progress. Save before leaving?';
     return e.returnValue;
